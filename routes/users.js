@@ -1,6 +1,6 @@
 const express = require('express'),
 	router = express.Router(),
-	usersAPI = require('../bin/userAPI'),
+	usersAPI = require('../bin/usersAPI'),
 	passport = require('passport');
 
 router.get('/login', (req, res) => {

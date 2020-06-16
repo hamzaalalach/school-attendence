@@ -36,7 +36,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/', require('./routes/api'));
+app.use('/api', require('./routes/api'));
 app.use('/', require('./routes/home'));
 app.use('/chairman', require('./routes/chairman'));
 app.use('/users', require('./routes/users'));

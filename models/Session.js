@@ -14,7 +14,7 @@ const SessionSchema = new mongoose.Schema({
 		required: true
 	},
 	lesson: {
-		type: ObjectId,
+		type: String,
 		required: true
 	}
 });

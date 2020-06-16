@@ -6,7 +6,7 @@ const LessonSchema = new mongoose.Schema({
 		required: true
 	},
 	teacher: {
-		type: ObjectId,
+		type: String,
 		required: true
 	},
 	sessions: {

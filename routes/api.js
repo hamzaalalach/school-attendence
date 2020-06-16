@@ -1,15 +1,14 @@
 const router = require('express').Router();
+const abort = require('../bin/abort');
 const teachersAPI = require('../bin/teachersAPI');
 const branchesAPI = require('../bin/branchesAPI');
+const lessonsAPI = require('../bin/lessonsAPI');
+const sessionsAPI = require('../bin/sessionsAPI');
 
 router.get('/teachers', (req, res) => {
 	teachersAPI.getTeachers((err, teachers) => {
 		if (err) {
-			res.status(500).json({
-				success: false,
-				error: 'Internal Server Error',
-				message: err
-			});
+			abort.internalServer(res, err);
 		} else {
 			res.status(200).json({
 				success: true,
@@ -23,17 +22,9 @@ router.get('/teachers', (req, res) => {
 router.post('/teachers', (req, res) => {
 	teachersAPI.createTeacher(req.body, (err, teacher) => {
 		if (err && err.status === 422) {
-			res.status(422).json({
-				success: false,
-				error: 422,
-				message: 'unprocessable'
-			});
+			abort.unprocessable(res);
 		} else if (err && err.status === 500) {
-			res.status(500).json({
-				success: false,
-				error: 'Internal Server Error',
-				message: err
-			});
+			abort.internalServer(res, err);
 		} else {
 			res.status(200).json({
 				success: true,
@@ -46,17 +37,9 @@ router.post('/teachers', (req, res) => {
 router.patch('/teachers/:id', (req, res) => {
 	teachersAPI.updateTeacher(req.params.id, req.body, (err, teacher) => {
 		if (err && err.status === 404) {
-			res.status(404).json({
-				success: false,
-				error: 404,
-				message: 'Not Found'
-			});
+			abort.notFound(res);
 		} else if (err && err.status === 500) {
-			res.status(500).json({
-				success: false,
-				error: 'Internal Server Error',
-				message: err.message
-			});
+			abort.internalServer(res, err.message);
 		} else {
 			res.status(200).json({
 				success: true,
@@ -69,11 +52,7 @@ router.patch('/teachers/:id', (req, res) => {
 router.delete('/teachers/:id', (req, res) => {
 	teachersAPI.deleteTeacher(req.params.id, (err, teacher) => {
 		if (err) {
-			res.status(404).json({
-				success: false,
-				error: 404,
-				message: 'Not Found'
-			});
+			abort.notFound(res);
 		} else {
 			res.status(200).json({
 				success: true,
@@ -86,11 +65,7 @@ router.delete('/teachers/:id', (req, res) => {
 router.get('/branches', (req, res) => {
 	branchesAPI.getBranches((err, branches) => {
 		if (err) {
-			res.status(500).json({
-				success: false,
-				error: 'Internal Server Error',
-				message: err
-			});
+			abort.internalServer(res, err);
 		} else {
 			res.status(200).json({
 				success: true,
@@ -104,17 +79,9 @@ router.get('/branches', (req, res) => {
 router.post('/branches', (req, res) => {
 	branchesAPI.createBranch(req.body, (err, branch) => {
 		if (err && err.status === 422) {
-			res.status(422).json({
-				success: false,
-				error: 422,
-				message: 'unprocessable'
-			});
+			abort.unprocessable(res);
 		} else if (err && err.status === 500) {
-			res.status(500).json({
-				success: false,
-				error: 'Internal Server Error',
-				message: err.message
-			});
+			abort.internalServer(res, err.message);
 		} else {
 			res.status(200).json({
 				success: true,
@@ -127,17 +94,9 @@ router.post('/branches', (req, res) => {
 router.patch('/branches/:id', (req, res) => {
 	branchesAPI.updateBranch(req.params.id, req.body, (err, branch) => {
 		if (err && err.status === 404) {
-			res.status(404).json({
-				success: false,
-				error: 404,
-				message: 'Not Found'
-			});
+			abort.notFound(res);
 		} else if (err && err.status === 500) {
-			res.status(500).json({
-				success: false,
-				error: 'Internal Server Error',
-				message: err.message
-			});
+			abort.internalServer(res, err.message);
 		} else {
 			res.status(200).json({
 				success: true,
@@ -150,15 +109,127 @@ router.patch('/branches/:id', (req, res) => {
 router.delete('/branches/:id', (req, res) => {
 	branchesAPI.deleteBranch(req.params.id, (err, branch) => {
 		if (err) {
-			res.status(404).json({
-				success: false,
-				error: 404,
-				message: 'Not Found'
-			});
+			abort.notFound(res);
 		} else {
 			res.status(200).json({
 				success: true,
 				branch
+			});
+		}
+	});
+});
+
+router.get('/lessons', (req, res) => {
+	lessonsAPI.getLessons((err, lessons) => {
+		if (err) {
+			abort.internalServer(res, err);
+		} else {
+			res.status(200).json({
+				success: true,
+				lessons,
+				totalLessons: lessons.length
+			});
+		}
+	});
+});
+
+router.post('/lessons', (req, res) => {
+	lessonsAPI.createLesson(req.body, (err, lesson) => {
+		if (err && err.status === 422) {
+			abort.unprocessable(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
+		} else if (err && err.status === 409) {
+			abort.conflict(res);
+		} else {
+			res.status(200).json({
+				success: true,
+				lesson
+			});
+		}
+	});
+});
+
+router.patch('/lessons/:id', (req, res) => {
+	lessonsAPI.updateLesson(req.params.id, req.body, (err, lesson) => {
+		if (err && err.status === 404) {
+			abort.notFound(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
+		} else {
+			res.status(200).json({
+				success: true,
+				lesson
+			});
+		}
+	});
+});
+
+router.delete('/lessons/:id', (req, res) => {
+	lessonsAPI.deleteLesson(req.params.id, (err, lesson) => {
+		if (err) {
+			abort.notFound(res);
+		} else {
+			res.status(200).json({
+				success: true,
+				lesson
+			});
+		}
+	});
+});
+
+router.get('/sessions', (req, res) => {
+	sessionsAPI.getSessions((err, sessions) => {
+		if (err) {
+			abort.internalServer(res, err);
+		} else {
+			res.status(200).json({
+				success: true,
+				sessions,
+				totalSessions: sessions.length
+			});
+		}
+	});
+});
+
+router.post('/sessions', (req, res) => {
+	sessionsAPI.createSession(req.body, (err, session) => {
+		if (err && err.status === 422) {
+			abort.unprocessable(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
+		} else {
+			res.status(200).json({
+				success: true,
+				session
+			});
+		}
+	});
+});
+
+router.patch('/sessions/:id', (req, res) => {
+	sessionsAPI.updateSession(req.params.id, req.body, (err, session) => {
+		if (err && err.status === 404) {
+			abort.notFound(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
+		} else {
+			res.status(200).json({
+				success: true,
+				session
+			});
+		}
+	});
+});
+
+router.delete('/sessions/:id', (req, res) => {
+	sessionsAPI.deleteSession(req.params.id, (err, session) => {
+		if (err) {
+			abort.notFound(res);
+		} else {
+			res.status(200).json({
+				success: true,
+				session
 			});
 		}
 	});

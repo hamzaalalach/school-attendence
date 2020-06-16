@@ -12,7 +12,7 @@ describe('Teachers endpoints', () => {
 	let id;
 
 	it('Should return 200 on post teachers', async done => {
-		const res = await client.post('/teachers').send({
+		const res = await client.post('/api/teachers').send({
 			nom: 'nomTest',
 			prenom: 'prenomTest'
 		});
@@ -26,7 +26,7 @@ describe('Teachers endpoints', () => {
 	});
 
 	it('Should return 422 on post teachers missing data', async done => {
-		const res = await client.post('/teachers').send({
+		const res = await client.post('/api/teachers').send({
 			nom: 'nomTest'
 		});
 		const data = res.body;
@@ -39,7 +39,7 @@ describe('Teachers endpoints', () => {
 	});
 
 	it('Should return 200 on patch teacher', async done => {
-		const res = await client.patch('/teachers/' + id).send({
+		const res = await client.patch('/api/teachers/' + id).send({
 			nom: 'nomTestNew'
 		});
 		const data = res.body;
@@ -51,7 +51,7 @@ describe('Teachers endpoints', () => {
 	});
 
 	it('Should return 404 on patch teachers wrong id', async done => {
-		const res = await client.patch('/teachers/1').send({
+		const res = await client.patch('/api/teachers/1').send({
 			nom: 'nomTestNew'
 		});
 		const data = res.body;
@@ -64,18 +64,18 @@ describe('Teachers endpoints', () => {
 	});
 
 	it('Should return 200 on get teachers', async done => {
-		const res = await client.get('/teachers');
+		const res = await client.get('/api/teachers');
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(200);
 		expect(data.success).toBe(true);
-		expect(data.totalTeachers).toBe(1);
+		expect(data.totalTeachers).toBe(2);
 		expect(data).toHaveProperty('teachers');
 		done();
 	});
 
 	it('Should return 200 on delete teachers', async done => {
-		const res = await client.delete('/teachers/' + id);
+		const res = await client.delete('/api/teachers/' + id);
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(200);
@@ -85,7 +85,7 @@ describe('Teachers endpoints', () => {
 	});
 
 	it('Should return 404 on delete teachers wrong id', async done => {
-		const res = await client.delete('/teachers/1');
+		const res = await client.delete('/api/teachers/1');
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(404);
@@ -100,7 +100,7 @@ describe('Branches endpoints', () => {
 	let id;
 
 	it('Should return 200 on post branches', async done => {
-		const res = await client.post('/branches').send({
+		const res = await client.post('/api/branches').send({
 			label: 'Data Science'
 		});
 		const data = res.body;
@@ -113,7 +113,7 @@ describe('Branches endpoints', () => {
 	});
 
 	it('Should return 422 on post branches missing data', async done => {
-		const res = await client.post('/branches').send({});
+		const res = await client.post('/api/branches').send({});
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(422);
@@ -124,7 +124,7 @@ describe('Branches endpoints', () => {
 	});
 
 	it('Should return 200 on patch branches', async done => {
-		const res = await client.patch('/branches/' + id).send({
+		const res = await client.patch('/api/branches/' + id).send({
 			label: 'Data Litterature'
 		});
 		const data = res.body;
@@ -136,7 +136,7 @@ describe('Branches endpoints', () => {
 	});
 
 	it('Should return 404 on patch branches wrong id', async done => {
-		const res = await client.patch('/branches/1').send({
+		const res = await client.patch('/api/branches/1').send({
 			label: 'Data Something'
 		});
 		const data = res.body;
@@ -149,7 +149,7 @@ describe('Branches endpoints', () => {
 	});
 
 	it('Should return 200 on get branches', async done => {
-		const res = await client.get('/branches');
+		const res = await client.get('/api/branches');
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(200);
@@ -160,7 +160,7 @@ describe('Branches endpoints', () => {
 	});
 
 	it('Should return 200 on delete branches', async done => {
-		const res = await client.delete('/branches/' + id);
+		const res = await client.delete('/api/branches/' + id);
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(200);
@@ -170,13 +170,176 @@ describe('Branches endpoints', () => {
 	});
 
 	it('Should return 404 on delete branches wrong id', async done => {
-		const res = await client.delete('/branches/1');
+		const res = await client.delete('/api/branches/1');
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(404);
 		expect(data.success).toBe(false);
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
+		done();
+	});
+});
+
+describe('Lessons endpoints', () => {
+	let id;
+
+	it('Should return 200 on post lessons', async done => {
+		const res = await client.post('/api/lessons').send({
+			intitule: 'Cours 1',
+			teacher: '5ee6b26214075f29c1aadff2'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('lesson');
+		expect(data.lesson.intitule).toBe('Cours 1');
+		id = data.lesson._id;
+		done();
+	});
+
+	it('Should return 422 on post lessons missing data', async done => {
+		const res = await client.post('/api/lessons').send({});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(422);
+		expect(data.success).toBe(false);
+		expect(data.error).toBe(422);
+		expect(data.message).toBe('unprocessable');
+		done();
+	});
+
+	it('Should return 422 on post lessons duplicated intitule', async done => {
+		const res = await client.post('/api/lessons').send({
+			intitule: 'Cours 1',
+			teacher: '5ee6b26214075f29c1aadff2'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(409);
+		expect(data.success).toBe(false);
+		expect(data.error).toBe(409);
+		expect(data.message).toBe('Conflict');
+		done();
+	});
+
+	it('Should return 200 on patch lessons', async done => {
+		const res = await client.patch('/api/lessons/' + id).send({
+			intitule: 'Cours 2'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data.lesson.intitule).toBe('Cours 2');
+		expect(data.lesson._id).toBe(id);
+		done();
+	});
+
+	it('Should return 404 on patch lessons wrong id', async done => {
+		const res = await client.patch('/api/lessons/1').send({
+			intitule: 'Data Something'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(404);
+		expect(data.success).toBe(false);
+		expect(data.message).toBe('Not Found');
+		expect(data.error).toBe(404);
+		done();
+	});
+
+	it('Should return 200 on get lessons', async done => {
+		const res = await client.get('/api/lessons');
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('lessons');
+		expect(data.totalLessons).toBe(2);
+		done();
+	});
+
+	it('Should return 200 on delete lessons', async done => {
+		const res = await client.delete('/api/lessons/' + id);
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('lesson');
+		expect(data.lesson._id).toBe(id);
+		done();
+	});
+
+	it('Should return 404 on delete lessons wrong id', async done => {
+		const res = await client.delete('/api/lessons/1');
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(404);
+		expect(data.success).toBe(false);
+		expect(data.message).toBe('Not Found');
+		expect(data.error).toBe(404);
+		done();
+	});
+});
+
+describe('Sessions endpoints', () => {
+	let id;
+
+	it('Should return 200 on post sessions', async done => {
+		const res = await client.post('/api/sessions').send({
+			salle: 'Salle 1',
+			heure: '8-10',
+			date: new Date(),
+			lesson: '5ee7f1f61a7ba9206e20bf0b'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('session');
+		expect(data.session.salle).toBe('Salle 1');
+		expect(data.session.heure).toBe('8-10');
+		expect(data.session).toHaveProperty('date');
+		expect(data.session.lesson).toBe('5ee7f1f61a7ba9206e20bf0b');
+		id = data.session._id;
+		done();
+	});
+
+	it('Should return 200 on patch sessions', async done => {
+		const res = await client.patch('/api/sessions/' + id).send({
+			salle: 'Salle 2'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('session');
+		expect(data.session.salle).toBe('Salle 2');
+		expect(data.session.heure).toBe('8-10');
+		done();
+	});
+
+	it('Should return 200 on get sessions', async done => {
+		const res = await client.get('/api/sessions');
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('sessions');
+		expect(data.totalSessions).toBe(1);
+		done();
+	});
+
+	it('Should return 200 on delete sessions', async done => {
+		const res = await client.delete('/api/sessions/' + id);
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('session');
+		expect(data.session._id).toBe(id);
 		done();
 	});
 });

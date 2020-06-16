@@ -1,11 +1,11 @@
-(function($) {
+(function ($) {
 
 	"use strict";
 
-	var fullHeight = function() {
+	var fullHeight = function () {
 
 		$('.js-fullheight').css('height', $(window).height());
-		$(window).resize(function(){
+		$(window).resize(function () {
 			$('.js-fullheight').css('height', $(window).height());
 		});
 
@@ -13,8 +13,8 @@
 	fullHeight();
 
 	$('#sidebarCollapse').on('click', function () {
-      $('#sidebar').toggleClass('active');
-  });
+		$('#sidebar').toggleClass('active');
+	});
 
 })(jQuery);
 $(document).ready(function () {
@@ -40,3 +40,18 @@ $(document).ready(function () {
 		}
 	});
 });
+$(".edit").click(function () {
+	var $row = $(this).closest("tr");
+	$('input[name="nom"]').val($(".nom", $row).text());
+	$('input[name="email"]').val($(".email", $row).text());
+	$('input[name="adresse"]').val($(".adresse", $row).text());
+	$('input[name="telephone"]').val($(".telephone", $row).text());
+  });
+
+  $(".edit").click(function () {
+	var $row = $(this).closest("tr");
+	$('input[name="filiere"]').val($(".filiere", $row).text());
+	$('input[name="coordonnateur"]').val($(".coordonnateur", $row).text());
+	
+  });
+

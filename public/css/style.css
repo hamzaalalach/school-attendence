@@ -11853,6 +11853,7 @@ h5,
   display: block;
   color: rgba(255, 255, 255, 0.6);
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  cursor: pointer;
 }
 
 

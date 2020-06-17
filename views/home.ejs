@@ -6,6 +6,10 @@
 	<link rel="stylesheet" type="text/css" href="css/home.css">
 	<link href="https://fonts.googleapis.com/css?family=Poppins:600&display=swap" rel="stylesheet">
 	<script src="https://kit.fontawesome.com/a81368914c.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 </head>
 
@@ -16,7 +20,7 @@
 			<img src="images/undraw.svg">
 		</div>
 		<div class="login-content">
-			<form method="POST" action="http://localhost:5000/users/login">
+			<form id="loginForm">
 				<img src="images/avatar.svg">
 				<h2 class="title">Welcome</h2>
 				<div class="input-div one">
@@ -25,7 +29,7 @@
 					</div>
 					<div class="div">
 						<h5>Email</h5>
-						<input type="text" name="email" class="input">
+						<input type="text" id="email" name="email" class="input" required>
 					</div>
 				</div>
 				<div class="input-div pass">
@@ -34,7 +38,7 @@
 					</div>
 					<div class="div">
 						<h5>Password</h5>
-						<input type="password" name="password" class="input">
+						<input type="password" id="password" name="password" class="input" required>
 					</div>
 				</div>
 				<a href="#">Forgot Password?</a>
@@ -45,11 +49,15 @@
 					<option>Responsable filière</option>
 					<option>Responsable des Affaires</option>
 				</select>
-				<input type="submit" class="btn" value="Login">
+				<input type="submit" name="submit" id="but_submit" class="btn" value="Login">
 			</form>
 		</div>
 	</div>
 	<script type="text/javascript" src="js/home.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+	<script src="https://unpkg.com/sweetalert/dist/sweetalert.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
+
 </body>
 
 </html>

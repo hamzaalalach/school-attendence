@@ -187,7 +187,7 @@ describe('Lessons endpoints', () => {
 	it('Should return 200 on post lessons', async done => {
 		const res = await client.post('/api/lessons').send({
 			intitule: 'Cours 1',
-			teacher: '5ee6b26214075f29c1aadff2'
+			teacher: '5eea9cc11339ef1a79207a9c'
 		});
 		const data = res.body;
 
@@ -213,7 +213,7 @@ describe('Lessons endpoints', () => {
 	it('Should return 422 on post lessons duplicated intitule', async done => {
 		const res = await client.post('/api/lessons').send({
 			intitule: 'Cours 1',
-			teacher: '5ee6b26214075f29c1aadff2'
+			teacher: '5eea9cc11339ef1a79207a9c'
 		});
 		const data = res.body;
 
@@ -292,7 +292,7 @@ describe('Sessions endpoints', () => {
 			salle: 'Salle 1',
 			heure: '8-10',
 			date: new Date(),
-			lesson: '5ee7f1f61a7ba9206e20bf0b'
+			lesson: '5eea9d099924bc1ac34ca553'
 		});
 		const data = res.body;
 
@@ -302,8 +302,19 @@ describe('Sessions endpoints', () => {
 		expect(data.session.salle).toBe('Salle 1');
 		expect(data.session.heure).toBe('8-10');
 		expect(data.session).toHaveProperty('date');
-		expect(data.session.lesson).toBe('5ee7f1f61a7ba9206e20bf0b');
+		expect(data.session.lesson).toBe('5eea9d099924bc1ac34ca553');
 		id = data.session._id;
+		done();
+	});
+
+	it('Should return 422 on post sessions missing data', async done => {
+		const res = await client.post('/api/sessions').send({});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(422);
+		expect(data.success).toBe(false);
+		expect(data.error).toBe(422);
+		expect(data.message).toBe('unprocessable');
 		done();
 	});
 
@@ -318,6 +329,19 @@ describe('Sessions endpoints', () => {
 		expect(data).toHaveProperty('session');
 		expect(data.session.salle).toBe('Salle 2');
 		expect(data.session.heure).toBe('8-10');
+		done();
+	});
+
+	it('Should return 404 on patch sessions wrong id', async done => {
+		const res = await client.patch('/api/sessions/1').send({
+			heure: '10-12'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(404);
+		expect(data.success).toBe(false);
+		expect(data.message).toBe('Not Found');
+		expect(data.error).toBe(404);
 		done();
 	});
 
@@ -340,6 +364,17 @@ describe('Sessions endpoints', () => {
 		expect(data.success).toBe(true);
 		expect(data).toHaveProperty('session');
 		expect(data.session._id).toBe(id);
+		done();
+	});
+
+	it('Should return 404 on delete sessions wrong id', async done => {
+		const res = await client.delete('/api/sessions/1');
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(404);
+		expect(data.success).toBe(false);
+		expect(data.message).toBe('Not Found');
+		expect(data.error).toBe(404);
 		done();
 	});
 });

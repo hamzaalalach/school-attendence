@@ -55,3 +55,26 @@ $(".edit").click(function () {
 	
   });
 
+  
+  $(".logout_btn").click(function (e) {
+	
+	e.preventDefault();
+	$.ajax({
+		type: "POST",
+		url: "http://localhost:5000/users/logout",
+		
+		success: function (result) {
+			
+			
+			 window.location='http://localhost:5000';
+				
+				  
+			
+		}
+			
+	});
+	
+	
+});
+
+

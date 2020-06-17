@@ -1,5 +1,11 @@
 const mongoose = require('mongoose');
-const uri = 'mongodb://dbUser:dbPass00@ds133127.mlab.com:33127/schoolattendance';
+let uri;
+
+if (process.env.NODE_ENV === 'test') {
+	uri = 'mongodb://dbUser:dbPass00@ds149732.mlab.com:49732/schoolattendance_test';
+} else {
+	uri = 'mongodb://dbUser:dbPass00@ds133127.mlab.com:33127/schoolattendance';
+}
 
 exports.connectDB = () => {
 	var db = mongoose.connection;

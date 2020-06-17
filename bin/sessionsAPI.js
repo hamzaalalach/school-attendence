@@ -20,7 +20,7 @@ exports.createSession = (data, cb) => {
 exports.updateSession = (id, data, cb) => {
 	Session.findById(id, (err, session) => {
 		if (err) {
-			cb({ stauts: 404 });
+			cb({ status: 404 });
 		} else {
 			for (let i in data) {
 				session[i] = data[i];

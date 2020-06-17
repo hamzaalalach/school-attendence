@@ -6,7 +6,7 @@
 	"scripts": {
 		"start": "node bin/www",
 		"dev": "nodemon bin/www",
-		"test": "jest --detectOpenHandles --testTimeout=50000"
+		"test": "cross-env NODE_ENV=test jest --detectOpenHandles --testTimeout=50000"
 	},
 	"author": "",
 	"license": "ISC",
@@ -26,14 +26,13 @@
 		"xss-clean": "^0.1.1"
 	},
 	"devDependencies": {
+		"cross-env": "^7.0.2",
 		"jest": "^26.0.1",
 		"nodemon": "^2.0.4",
 		"supertest": "^4.0.2"
 	},
 	"jest": {
 		"testEnvironment": "node",
-		"coveragePathIgnorePatterns": [
-			"/node_modules/"
-		]
+		"coveragePathIgnorePatterns": [ "/node_modules/" ]
 	}
 }

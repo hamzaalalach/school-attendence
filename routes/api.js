@@ -4,6 +4,7 @@ const teachersAPI = require('../bin/teachersAPI');
 const branchesAPI = require('../bin/branchesAPI');
 const lessonsAPI = require('../bin/lessonsAPI');
 const sessionsAPI = require('../bin/sessionsAPI');
+const studentsAPI = require('../bin/studentsAPI');
 
 router.get('/teachers', (req, res) => {
 	teachersAPI.getTeachers((err, teachers) => {
@@ -230,6 +231,65 @@ router.delete('/sessions/:id', (req, res) => {
 			res.status(200).json({
 				success: true,
 				session
+			});
+		}
+	});
+});
+
+router.get('/students', (req, res) => {
+	studentsAPI.getStudents((err, students) => {
+		if (err) {
+			abort.internalServer(res, err);
+		} else {
+			res.status(200).json({
+				success: true,
+				students,
+				totalStudents: students.length
+			});
+		}
+	});
+});
+
+router.post('/students', (req, res) => {
+	studentsAPI.createStudent(req.body, (err, student) => {
+		if (err && err.status === 422) {
+			abort.unprocessable(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
+		} else if (err && err.status === 409) {
+			abort.conflict(res);
+		} else {
+			res.status(200).json({
+				success: true,
+				student
+			});
+		}
+	});
+});
+
+router.patch('/students/:id', (req, res) => {
+	studentsAPI.updateStudent(req.params.id, req.body, (err, student) => {
+		if (err && err.status === 404) {
+			abort.notFound(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
+		} else {
+			res.status(200).json({
+				success: true,
+				student
+			});
+		}
+	});
+});
+
+router.delete('/students/:id', (req, res) => {
+	studentsAPI.deleteStudent(req.params.id, (err, student) => {
+		if (err) {
+			abort.notFound(res);
+		} else {
+			res.status(200).json({
+				success: true,
+				student
 			});
 		}
 	});

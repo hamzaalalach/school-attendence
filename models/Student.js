@@ -14,7 +14,7 @@ const StudentSchema = new mongoose.Schema({
 		required: true
 	},
 	branch: {
-		type: ObjectId,
+		type: String,
 		required: true
 	}
 });

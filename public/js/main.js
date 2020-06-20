@@ -1,3 +1,5 @@
+//const e = require("express");
+
 (function ($) {
 
 	"use strict";
@@ -40,41 +42,35 @@ $(document).ready(function () {
 		}
 	});
 });
-$(".edit").click(function () {
-	var $row = $(this).closest("tr");
-	$('input[name="nom"]').val($(".nom", $row).text());
-	$('input[name="email"]').val($(".email", $row).text());
-	$('input[name="adresse"]').val($(".adresse", $row).text());
-	$('input[name="telephone"]').val($(".telephone", $row).text());
-  });
 
-  $(".edit").click(function () {
+
+$(".edit").click(function () {
 	var $row = $(this).closest("tr");
 	$('input[name="filiere"]').val($(".filiere", $row).text());
 	$('input[name="coordonnateur"]').val($(".coordonnateur", $row).text());
-	
-  });
 
-  
-  $(".logout_btn").click(function (e) {
-	
+});
+
+
+$(".logout_btn").click(function (e) {
+
 	e.preventDefault();
 	$.ajax({
 		type: "POST",
 		url: "http://localhost:5000/users/logout",
-		
+
 		success: function (result) {
-			
-			
-			 window.location='http://localhost:5000';
-				
-				  
-			
+
+
+			window.location = 'http://localhost:5000';
+
+
+
 		}
-			
+
 	});
-	
-	
+
+
 });
 
 

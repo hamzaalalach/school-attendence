@@ -5,6 +5,10 @@ const BranchSchema = new mongoose.Schema({
 		type: String,
 		required: true
 	},
+	coordonnateur: {
+		type: String,
+		required: false
+	},
 	lessons: {
 		type: Array,
 		default: []

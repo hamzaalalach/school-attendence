@@ -1,6 +1,7 @@
 const app = require('../index');
 const request = require('supertest');
 const db = require('../bin/db');
+const { expectCt } = require('helmet');
 let client;
 
 beforeAll(async () => {
@@ -14,13 +15,21 @@ describe('Teachers endpoints', () => {
 	it('Should return 200 on post teachers', async done => {
 		const res = await client.post('/api/teachers').send({
 			nom: 'nomTest',
-			prenom: 'prenomTest'
+			prenom: 'prenomTest',
+			email: 'email@example.com',
+			adresse: 'Street number n',
+			telephone: '0600000000'
 		});
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(200);
 		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('teacher');
 		expect(data.teacher.nom).toBe('nomTest');
+		expect(data.teacher.prenom).toBe('prenomTest');
+		expect(data.teacher.email).toBe('email@example.com');
+		expect(data.teacher.adresse).toBe('Street number n');
+		expect(data.teacher.telephone).toBe('0600000000');
 		id = data.teacher._id;
 		done();
 	});
@@ -101,13 +110,17 @@ describe('Branches endpoints', () => {
 
 	it('Should return 200 on post branches', async done => {
 		const res = await client.post('/api/branches').send({
-			label: 'Data Science'
+			label: 'Data Science',
+			coordonnateur: 'Someone'
 		});
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(200);
 		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('branch');
 		expect(data.branch.label).toBe('Data Science');
+		expect(data.branch.coordonnateur).toBe('Someone');
+
 		id = data.branch._id;
 		done();
 	});
@@ -155,7 +168,7 @@ describe('Branches endpoints', () => {
 		expect(res.statusCode).toEqual(200);
 		expect(data.success).toBe(true);
 		expect(data).toHaveProperty('branches');
-		expect(data.totalBranches).toBe(1);
+		expect(data.totalBranches).toBe(2);
 		done();
 	});
 
@@ -369,6 +382,120 @@ describe('Sessions endpoints', () => {
 
 	it('Should return 404 on delete sessions wrong id', async done => {
 		const res = await client.delete('/api/sessions/1');
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(404);
+		expect(data.success).toBe(false);
+		expect(data.message).toBe('Not Found');
+		expect(data.error).toBe(404);
+		done();
+	});
+});
+
+describe('Students endpoints', () => {
+	let id;
+
+	it('Should return 200 on post students', async done => {
+		const res = await client.post('/api/students').send({
+			matricule: '032898A',
+			nom: 'Alalach',
+			prenom: 'Hamza',
+			branch: '5eed4e0faf7fd6725e0ee7b8'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('student');
+		expect(data.student.branch).toBe('5eed4e0faf7fd6725e0ee7b8');
+		expect(data.student.matricule).toBe('032898A');
+		expect(data.student.nom).toBe('Alalach');
+		expect(data.student.prenom).toBe('Hamza');
+
+		id = data.student._id;
+		done();
+	});
+
+	it('Should return 422 on post students missing data', async done => {
+		const res = await client.post('/api/students').send({});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(422);
+		expect(data.success).toBe(false);
+		expect(data.error).toBe(422);
+		expect(data.message).toBe('unprocessable');
+		done();
+	});
+
+	it('Should return 422 on post students duplicated matricule', async done => {
+		const res = await client.post('/api/students').send({
+			matricule: '032898A',
+			nom: 'nom',
+			prenom: 'prenom',
+			branch: '5eed4e0faf7fd6725e0ee7b8'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(409);
+		expect(data.success).toBe(false);
+		expect(data.error).toBe(409);
+		expect(data.message).toBe('Conflict');
+		done();
+	});
+
+	it('Should return 200 on patch students', async done => {
+		const res = await client.patch('/api/students/' + id).send({
+			matricule: '032898B',
+			nom: 'Alalach mod'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('student');
+		expect(data.student.matricule).toBe('032898B');
+		expect(data.student.nom).toBe('Alalach mod');
+		expect(data.student._id).toBe(id);
+		done();
+	});
+
+	it('Should return 404 on patch students wrong id', async done => {
+		const res = await client.patch('/api/students/1').send({
+			nom: 'new name'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(404);
+		expect(data.success).toBe(false);
+		expect(data.message).toBe('Not Found');
+		expect(data.error).toBe(404);
+		done();
+	});
+
+	it('Should return 200 on get students', async done => {
+		const res = await client.get('/api/students');
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('students');
+		expect(data.totalStudents).toBe(1);
+		done();
+	});
+
+	it('Should return 200 on delete students', async done => {
+		const res = await client.delete('/api/students/' + id);
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('student');
+		expect(data.student._id).toBe(id);
+		done();
+	});
+
+	it('Should return 404 on delete students wrong id', async done => {
+		const res = await client.delete('/api/students/1');
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(404);

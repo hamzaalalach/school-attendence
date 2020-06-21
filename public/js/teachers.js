@@ -1,11 +1,30 @@
 //---------------GET TEACHERS----------------------//
 
-const renderTeachers = (teachers) => {
+/*const renderTeachers = (teachers) => {
 	teachers.forEach(element => {
 		renderTeacher(element);
 	});
 
+}*/
+clearResults = () => {
+	document.querySelector('tbody').innerHTML = '';
+	document.querySelector('.pagination').innerHTML = '';
+};
+
+const createPagination = (page) => {
+	const html = `
+                <li class="page-item prev"  data-goto=${page - 1}><a href="#">Previous</a></li>
+                
+                <li class="page-item active">
+                  <a href="#" class="page-link">${page}</a>
+                </li>
+               
+                <li class="page-item next" id="next" data-goto=${page + 1}>
+                  <a href="#" class="page-link">Next</a>
+				</li>`
+	document.querySelector('.pagination').insertAdjacentHTML('beforeend', html);
 }
+
 const renderTeacher = (e) => {
 	const html = `<tr id="${e._id}">
 	<td>
@@ -71,16 +90,65 @@ const renderTeacher = (e) => {
 
 
 };
+const renderResults = (teachers, page = 1, resPerPage = 5) => {
+	let start, end;
+	start = (page - 1) * resPerPage;
+	end = page * resPerPage;
+	teachers.slice(start, end).forEach(element => renderTeacher(element));
+	
+	createPagination(page);
+
+}
+/*
 const getTeachers = async () => {
 	try {
 		const gl = await axios.get(`http://localhost:5000/api/teachers`);
 		renderTeachers(gl.data.teachers);
-		//renderTeachers(gl.data.teachers);
+		console.log(gl.data.teachers.length);
 	} catch (err) {
 		alert(err)
 	}
 };
 getTeachers();
+*/
+
+class Teachers {
+	constructor() {}
+	async getResults() {
+		try {
+			const res = await axios.get(`http://localhost:5000/api/teachers`);
+			this.result = res.data.teachers;
+
+		} catch (err) {
+			alert(err)
+		}
+	}
+
+};
+const state = {};
+const controlTeachers = async () => {
+	state.search = new Teachers();
+
+
+	await state.search.getResults();
+
+	//console.log(state.search);
+	renderResults(state.search.result);
+
+
+}
+controlTeachers();
+
+document.querySelector('.pagination').addEventListener('click', e => {
+	const btn = e.target.closest('.page-item');
+	const goto = parseInt(btn.dataset.goto);
+	const pages = Math.ceil(state.search.result.length / 5);
+
+	if (goto >= 1 && goto <= pages) {
+		clearResults();
+		renderResults(state.search.result, goto);
+	}
+});
 
 //-------------------ADD TEACHER-----------------//
 
@@ -106,6 +174,9 @@ const postTeacher = async () => {
 $("#addForm").submit(function (event) {
 	event.preventDefault();
 	postTeacher();
+	//addEmployeeModal
+	//$('#addEmployeeModal').hide(); //or  $('#IDModal').modal('hide');
+    //return false;
 })
 
 //------------------DELETE TEACHER-------------------//
@@ -159,19 +230,36 @@ const UIupdate = (id) => {
 	$(".adresse", $row).text($('input[name="adresse"]').val());
 	$(".telephone", $row).text($('input[name="telephone"]').val());
 }
-document.querySelector('tbody').addEventListener('click', (e) => {
-	
+/*document.querySelector('tbody').addEventListener('click', (e) => {
+
 	var id = e.target.parentNode.parentNode.parentNode.parentNode.id;
 	if (id) {
-		
+
 		$("#editForm").submit(function () {
-			
+
 			UIupdate(id);
-			
+
 			updateTeacher(id);
-			
+
 
 		})
 	}
-});
+});*/
+document.querySelector('tbody').addEventListener('click', (e) => {
 
+	var id = e.target.parentNode.parentNode.parentNode.parentNode.id;
+	if (id) {
+		state.Id=id;
+	}
+});
+$("#editForm").submit(function (e) {
+	e.preventDefault();
+	UIupdate(state.Id);
+
+	updateTeacher(state.Id);
+	
+
+
+})
+
+//----------------------PREV NEXT----------------------//

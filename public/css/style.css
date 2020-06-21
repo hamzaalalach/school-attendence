@@ -12160,6 +12160,7 @@ table.table .avatar {
 .pagination li.active a,
 .pagination li.active a.page-link {
   background: #00BFA6;
+  margin: 0 20px;
 }
 
 .pagination li.active a:hover {

@@ -36,10 +36,9 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-app.use('/api', require('./routes/api'));
 app.use('/', require('./routes/home'));
-app.use('/chairman', require('./routes/chairman'));
-app.use('/manager', require('./routes/manager'));
+app.use('/api', require('./routes/api'));
+app.use('/dashboard', require('./routes/dashboard'));
 app.use('/users', require('./routes/users'));
 require('./bin/db').connectDB();
 

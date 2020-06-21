@@ -117,92 +117,13 @@
                       <label for="selectAll"></label>
                     </span>
                   </th>
-                  <th>Filière</th>
-                  <th>Coordonnateur</th>
+                  <th >Filière</th>
+                  <th >Coordonnateur</th>
                   <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>
-                    <span class="custom-checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox1"
-                        name="options[]"
-                        value="1"
-                      />
-                      <label for="checkbox1"></label>
-                    </span>
-                  </td>
-                  <td class="filiere">Statistique - Economie appliquée</td>
-                  <td class="coordonnateur">ZAOUJAL NOUZHA</td>
-                  
-                  <td>
-                    <a
-                      href="#editEmployeeModal"
-                      class="edit"
-                      data-toggle="modal"
-                      ><i
-                        class="material-icons"
-                        data-toggle="tooltip"
-                        title="Modifier"
-                        >&#xE254;</i
-                      ></a
-                    >
-                    <a
-                      href="#deleteEmployeeModal"
-                      class="delete"
-                      data-toggle="modal"
-                      ><i
-                        class="material-icons"
-                        data-toggle="tooltip"
-                        title="Supprimer"
-                        >&#xE872;</i
-                      ></a
-                    >
-                  </td>
-                </tr>
-                <tr>
-                  <td>
-                    <span class="custom-checkbox">
-                      <input
-                        type="checkbox"
-                        id="checkbox2"
-                        name="options[]"
-                        value="1"
-                      />
-                      <label for="checkbox2"></label>
-                    </span>
-                  </td>
-                  <td class="filiere">Informatique</td>
-                  <td class="coordonnateur">KABBAJ ADIL </td>
-                  
-                  <td>
-                    <a
-                      href="#editEmployeeModal"
-                      class="edit"
-                      data-toggle="modal"
-                      ><i
-                        class="material-icons"
-                        data-toggle="tooltip"
-                        title="Modifier"
-                        >&#xE254;</i
-                      ></a
-                    >
-                    <a
-                      href="#deleteEmployeeModal"
-                      class="delete"
-                      data-toggle="modal"
-                      ><i
-                        class="material-icons"
-                        data-toggle="tooltip"
-                        title="Supprimer"
-                        >&#xE872;</i
-                      ></a
-                    >
-                  </td>
-                </tr>
+                
               </tbody>
             </table>
             <div class="clearfix">
@@ -223,11 +144,11 @@
             </div>
           </div>
         </div>
-        <!-- Edit Modal HTML -->
+        <!-- Add Modal HTML -->
         <div id="addEmployeeModal" class="modal fade">
           <div class="modal-dialog">
             <div class="modal-content">
-              <form>
+              <form id="addForm">
                 <div class="modal-header">
                   <h4 class="modal-title">Ajouter Filière</h4>
                   <button
@@ -242,7 +163,7 @@
                 <div class="modal-body">
                   <div class="form-group">
                     <label>Filière</label>
-                    <input
+                    <input id="filiere"
                       type="text"
                       
                       class="form-control"
@@ -251,7 +172,7 @@
                   </div>
                   <div class="form-group">
                     <label>Coordonnateur</label>
-                    <input
+                    <input id="coordonnateur"
                       type="text"
                       
                       class="form-control"
@@ -281,7 +202,7 @@
         <div id="editEmployeeModal" class="modal fade">
           <div class="modal-dialog">
             <div class="modal-content">
-              <form>
+              <form id="editForm">
                 <div class="modal-header">
                   <h4 class="modal-title">Modifier Filière</h4>
                   <button
@@ -331,7 +252,7 @@
             </div>
           </div>
         </div>
-        <!-- Delete Modal HTML -->
+        <!-- Delete Modal HTML 
         <div id="deleteEmployeeModal" class="modal fade">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -371,7 +292,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
     <script>
       
     </script>
@@ -379,6 +300,7 @@
     <script src="../js/popper.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/branches.js"></script>
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>

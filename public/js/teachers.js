@@ -10,6 +10,7 @@ const renderTeacher = (e) => {
 	const html = `<tr id="${e._id}">
 	<td>
 	<span>
+	<span>
       <span class="custom-checkbox">
         <input
           type="checkbox"
@@ -20,15 +21,18 @@ const renderTeacher = (e) => {
         <label for="checkbox1"></label>
 	  </span>
 	</span>
+	</span>
     </td>
-    <td class="nom">${e.nom+' '+e.prenom } </td>
-    <td class="email">ziane@gmail.com</td>
-    <td class="adresse">hay rahma, dakhla</td>
-    <td class="telephone">065656565</td>
+	<td class="nom">${e.nom}</td>
+	<td class="prenom">${e.prenom } </td>
+    <td class="email">${e.email}</td>
+    <td class="adresse">${e.adresse}</td>
+    <td class="telephone">${e.telephone}</td>
 	<td>
 	  <span>
       <a
-        href="#editEmployeeModal"
+		href="#editEmployeeModal"
+		
         class="edit"
         data-toggle="modal"
         ><i
@@ -57,6 +61,7 @@ const renderTeacher = (e) => {
 		var $row = $(this).closest("tr");
 
 		$('input[name="nom"]').val($(".nom", $row).text());
+		$('input[name="prenom"]').val($(".prenom", $row).text());
 		$('input[name="email"]').val($(".email", $row).text());
 		$('input[name="adresse"]').val($(".adresse", $row).text());
 		$('input[name="telephone"]').val($(".telephone", $row).text());
@@ -82,10 +87,16 @@ getTeachers();
 const postTeacher = async () => {
 	const Nom = $("#nom").val();
 	const Prenom = $("#prenom").val();
+	const Email = $("#email").val();
+	const Adresse = $("#adresse").val();
+	const Telephone = $("#telephone").val();
 	try {
 		const gl = await axios.post(`http://localhost:5000/api/teachers`, {
 			nom: Nom,
-			prenom: Prenom
+			prenom: Prenom,
+			email: Email,
+			adresse: Adresse,
+			telephone: Telephone
 		});
 		renderTeacher(gl.data.teacher);
 	} catch (err) {
@@ -118,12 +129,49 @@ document.querySelector('tbody').addEventListener('click', (e) => {
 
 
 //----------------UPDATE TEACHER------------------------//
-
-const updateTeacher = async () => {
+const updateTeacher = async (id) => {
+	const Nom = $('input[name="nom"]').val();
+	const Prenom = $('input[name="prenom"]').val();
+	const Email = $('input[name="email"]').val();
+	const Adresse = $('input[name="adresse"]').val();
+	const Telephone = $('input[name="telephone"]').val();
 	try {
-		await axios.patch(`http://localhost:5000/api/teachers/5eee085a1d8a4f2324ab93eb`,{nom:'nom',prenom:'pren'});
+		const gl = await axios.patch(`http://localhost:5000/api/teachers/${id}`, {
+			nom: Nom,
+			prenom: Prenom,
+			email: Email,
+			adresse: Adresse,
+			telephone: Telephone
+		});
+		UIupdate(id, gl.data.teacher);
+
 	} catch (err) {
 		alert(err)
 	}
 };
+
+const UIupdate = (id) => {
+	var $row = document.getElementById(id);
+	console.log($row);
+	$(".nom", $row).text($('input[name="nom"]').val());
+	$(".prenom", $row).text($('input[name="prenom"]').val());
+	$(".email", $row).text($('input[name="email"]').val());
+	$(".adresse", $row).text($('input[name="adresse"]').val());
+	$(".telephone", $row).text($('input[name="telephone"]').val());
+}
+document.querySelector('tbody').addEventListener('click', (e) => {
+	
+	var id = e.target.parentNode.parentNode.parentNode.parentNode.id;
+	if (id) {
+		
+		$("#editForm").submit(function () {
+			
+			UIupdate(id);
+			
+			updateTeacher(id);
+			
+
+		})
+	}
+});
 

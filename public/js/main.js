@@ -44,12 +44,12 @@ $(document).ready(function () {
 });
 
 
-$(".edit").click(function () {
+/*$(".edit").click(function () {
 	var $row = $(this).closest("tr");
 	$('input[name="filiere"]').val($(".filiere", $row).text());
 	$('input[name="coordonnateur"]').val($(".coordonnateur", $row).text());
 
-});
+});*/
 
 
 $(".logout_btn").click(function (e) {

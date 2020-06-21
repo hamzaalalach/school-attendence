@@ -23,7 +23,12 @@ router.get('/login', (req, res) => {
 });
 
 router.post('/login', (req, res, next) => {
-	passport.authenticate('local.chairman', function(err, user) {
+	const mode = req.body.mode;
+	if (mode != 'chairman' && mode != 'manager') {
+		res.status(400).end();
+	}
+
+	passport.authenticate('local.user', function(err, user) {
 		if (err) {
 			return next(err);
 		}
@@ -34,7 +39,10 @@ router.post('/login', (req, res, next) => {
 			if (err) {
 				return next(err);
 			}
-			return res.redirect('/chairman');
+			return res.status(200).json({
+				success: true,
+				redirect: mode
+			});
 		});
 	})(req, res, next);
 });

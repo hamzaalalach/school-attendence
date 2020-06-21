@@ -4,7 +4,7 @@ const LocalStrategy = require('passport-local').Strategy,
 
 module.exports = passport => {
 	passport.use(
-		'local.chairman',
+		'local.user',
 		new LocalStrategy({ usernameField: 'email' }, (email, password, done) => {
 			User.findOne({
 				email

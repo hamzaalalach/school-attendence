@@ -6,11 +6,11 @@ const express = require('express'),
 router.get('/login', (req, res) => {
 	// usersAPI.createUser(
 	// 	{
-	// 		firstName: 'Hamza',
-	// 		lastName: 'Alalach',
-	// 		email: 'hamzaalalach@gmail.com',
+	// 		firstName: 'First name',
+	// 		lastName: 'Last name',
+	// 		email: 'manager@gmail.com',
 	// 		password: '43898561',
-	// 		mode: 'chairman'
+	// 		mode: 'businessManager'
 	// 	},
 	// 	(err, user) => {
 	// 		if (err) {
@@ -20,11 +20,12 @@ router.get('/login', (req, res) => {
 	// 		}
 	// 	}
 	// );
+	// user;
 });
 
 router.post('/login', (req, res, next) => {
 	const mode = req.body.mode;
-	if (mode != 'chairman' && mode != 'manager') {
+	if (mode != 'chairman' && mode != 'businessManager') {
 		res.status(400).end();
 	}
 
@@ -38,6 +39,8 @@ router.post('/login', (req, res, next) => {
 		req.logIn(user, function(err) {
 			if (err) {
 				return next(err);
+			} else if (user.mode != mode) {
+				return res.status(403).end();
 			}
 			return res.status(200).json({
 				success: true,

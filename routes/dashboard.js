@@ -18,4 +18,8 @@ router.get('/lessons', ensureAuthenticated, (req, res) => {
 	canAccess(req.user, 'lessons') ? res.render('lessonsDashboard') : res.redirect('/');
 });
 
+router.get('/sessions', ensureAuthenticated, (req, res) => {
+	canAccess(req.user, 'sessions') ? res.render('sessionsDashboard') : res.redirect('/');
+});
+
 module.exports = router;

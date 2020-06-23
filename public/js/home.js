@@ -51,9 +51,14 @@ $('#loginForm').submit(function(event) {
 				}else if($('#sel').val()=='businessManager'){
 					setTimeout(() => (window.location = 'http://localhost:5000/dashboard/students'), 1200);
 				}
+				else if($('#sel').val()=='branchManager'){
+					setTimeout(() => (window.location = 'http://localhost:5000/dashboard/lessons'), 1200);
+				}
 			}
 		},
 		error: function(xhr, ajaxOptions, thrownError) {
+			//console.log(xhr.status);
+            
 			Swal.fire({
 				icon: 'error',
 				title: 'échec de la connexion',

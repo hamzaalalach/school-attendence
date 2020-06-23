@@ -4,28 +4,27 @@ const express = require('express'),
 	passport = require('passport');
 
 router.get('/login', (req, res) => {
-	// usersAPI.createUser(
-	// 	{
-	// 		firstName: 'First name',
-	// 		lastName: 'Last name',
-	// 		email: 'manager@gmail.com',
-	// 		password: '43898561',
-	// 		mode: 'businessManager'
-	// 	},
-	// 	(err, user) => {
-	// 		if (err) {
-	// 			console.log(err);
-	// 		} else {
-	// 			console.log(user);
-	// 		}
-	// 	}
-	// );
-	// user;
+	usersAPI.createUser(
+		{
+			firstName: 'First name',
+			lastName: 'Last name',
+			email: 'branches@gmail.com',
+			password: '43898561',
+			mode: 'branchManager'
+		},
+		(err, user) => {
+			if (err) {
+				console.log(err);
+			} else {
+				console.log(user);
+			}
+		}
+	);
 });
 
 router.post('/login', (req, res, next) => {
 	const mode = req.body.mode;
-	if (mode != 'chairman' && mode != 'businessManager') {
+	if (mode != 'chairman' && mode != 'businessManager' && mode != 'branchManager') {
 		res.status(400).end();
 	}
 

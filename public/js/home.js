@@ -46,7 +46,11 @@ $('#loginForm').submit(function(event) {
 					icon: 'success',
 					title: 'Connecté avec succès'
 				});
-				setTimeout(() => (window.location = 'http://localhost:5000/' + result.redirect), 1200);
+				if($('#sel').val()=='chairman'){
+					setTimeout(() => (window.location = 'http://localhost:5000/dashboard/teachers'), 1200);
+				}else if($('#sel').val()=='businessManager'){
+					setTimeout(() => (window.location = 'http://localhost:5000/dashboard/students'), 1200);
+				}
 			}
 		},
 		error: function(xhr, ajaxOptions, thrownError) {

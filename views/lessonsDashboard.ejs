@@ -63,15 +63,10 @@
           </h1>
           <ul class="list-unstyled components mb-5">
             
-            <li>
-              <a href="/dashboard/teachers"
-                ><span class="fa fa-cogs mr-3"></span>Gestion des enseignants</a
-              >
+            <li class="active">
+                <a href="#"><span class="fa fa-home mr-3"></span> Home</a>
             </li>
-            <li  class="active">
-              <a href="/dashboard/branches"
-                ><span class="fa fa-cogs mr-3"></span>Gestion des filières</a>
-            </li>
+            
             <li>
               <a class="logout_btn" href="#"
                 ><span class="fa fa-sign-out mr-3"></span> Se déconnecter</a
@@ -88,7 +83,7 @@
             <div class="table-title">
               <div class="row">
                 <div class="col-sm-6">
-                  <h2>Gestion des <b>Filières</b></h2>
+                  <h2>Gestion des <b>Leçons</b></h2>
                 </div>
                 <div class="col-sm-6">
                   <a id="addd"
@@ -96,7 +91,7 @@
                     class="btn btn-success"
                     data-toggle="modal"
                     ><i class="material-icons">&#xE147;</i>
-                    <span>Ajouter Filière</span></a
+                    <span>Ajouter Leçon</span></a
                   >
                   <a
                     href="#deleteEmployeeModal"
@@ -117,8 +112,8 @@
                       <label for="selectAll"></label>
                     </span>
                   </th>
-                  <th >Filière</th>
-                  <th >Coordonnateur</th>
+                  <th >Intitulé</th>
+                  <th >Enseignant</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -140,7 +135,7 @@
             <div class="modal-content">
               <form id="addForm">
                 <div class="modal-header">
-                  <h4 class="modal-title">Ajouter Filière</h4>
+                  <h4 class="modal-title">Ajouter Leçon</h4>
                   <button
                     type="button"
                     class="close"
@@ -152,8 +147,8 @@
                 </div>
                 <div class="modal-body">
                   <div class="form-group">
-                    <label>Filière</label>
-                    <input id="filiere"
+                    <label>Intitulé</label>
+                    <input id="intitule"
                       type="text"
                       
                       class="form-control"
@@ -161,13 +156,10 @@
                     />
                   </div>
                   <div class="form-group">
-                    <label>Coordonnateur</label>
-                    <input id="coordonnateur"
-                      type="text"
-                      
-                      class="form-control"
-                      required
-                    />
+                    <label>Enseignant</label>
+                    <select id="enseignant" class="form-control">
+                        <option disabled selected> Enseignant</option>
+                    </select>
                   </div>
                   
                 </div>
@@ -194,7 +186,7 @@
             <div class="modal-content">
               <form id="editForm">
                 <div class="modal-header">
-                  <h4 class="modal-title">Modifier Filière</h4>
+                  <h4 class="modal-title">Modifier Leçon</h4>
                   <button
                     type="button"
                     class="close"
@@ -206,22 +198,17 @@
                 </div>
                 <div class="modal-body">
                   <div class="form-group">
-                    <label>Filière</label>
+                    <label>Intitulé</label>
                     <input
                       type="text"
-                      name="filiere"
+                      name="intitule"
                       class="form-control"
                       required
                     />
                   </div>
                   <div class="form-group">
-                    <label>Coordonnateur</label>
-                    <input
-                      type="text"
-                      name="coordonnateur"
-                      class="form-control"
-                      required
-                    />
+                    <label>Enseignant</label>
+                    <select  id="ens" class="form-control"></select>
                   </div>
                   
                 </div>
@@ -290,7 +277,7 @@
     <script src="../js/popper.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/main.js"></script>
-    <script src="../js/branches.js"></script>
+    <script src="../js/lessons.js"></script>
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>

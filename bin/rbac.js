@@ -1,7 +1,7 @@
 const roles = {
 	chairman: [ 'teachers', 'branches' ],
 	businessManager: [ 'students' ],
-	branchManager: [ 'courses', 'sessions' ],
+	branchManager: [ 'lessons', 'sessions' ],
 	teacher: [ 'presence' ]
 };
 

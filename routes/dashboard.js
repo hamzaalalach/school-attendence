@@ -14,4 +14,8 @@ router.get('/students', ensureAuthenticated, (req, res) => {
 	canAccess(req.user, 'students') ? res.render('studentsDashboard') : res.redirect('/');
 });
 
+router.get('/lessons', ensureAuthenticated, (req, res) => {
+	canAccess(req.user, 'lessons') ? res.render('lessonsDashboard') : res.redirect('/');
+});
+
 module.exports = router;

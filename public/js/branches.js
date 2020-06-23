@@ -80,7 +80,7 @@ const renderBranche = (e) => {
 	});
 
 };
-const renderResults = (branches, page = 1, resPerPage = 5) => {
+const renderResults = (branches, page = 1, resPerPage = 8) => {
 	let start, end;
 	start = (page - 1) * resPerPage;
 	end = page * resPerPage;
@@ -89,16 +89,7 @@ const renderResults = (branches, page = 1, resPerPage = 5) => {
 	createPagination(page);
 
 }
-/*const getBranches = async () => {
-	try {
-		const gl = await axios.get(`http://localhost:5000/api/branches`);
-		console.log(gl.data);
-		renderBranches(gl.data.branches);
-	} catch (err) {
-		alert(err)
-	}
-};
-getBranches();*/
+
 
 class Branches {
 	constructor() {}
@@ -120,7 +111,7 @@ const controlBranches = async () => {
 
 	await state.search.getResults();
 
-	//console.log(state.search);
+	
 	renderResults(state.search.result);
 
 
@@ -130,7 +121,7 @@ controlBranches();
 document.querySelector('.pagination').addEventListener('click', e => {
 	const btn = e.target.closest('.page-item');
 	const goto = parseInt(btn.dataset.goto);
-	const pages = Math.ceil(state.search.result.length / 5);
+	const pages = Math.ceil(state.search.result.length / 8);
 
 	if (goto >= 1 && goto <= pages) {
 		clearResults();
@@ -154,10 +145,27 @@ const postBranche = async () => {
 		alert(err)
 	}
 };
+const clearInputs=()=>{
+	$('#filiere').val('');
+	$('#coordonnateur').val('');
+}
+const closeModal=()=>{
+	$('.modal').removeClass('in');
+	$('.modal').removeClass('show');
+	$('.modal').attr('aria-hidden','true');
+	$('.modal').css('display','none');
+	$('.modal-backdrop').remove();
+	$('body').removeClass('modal-open');
+	$('body').attr('style','');
+}
+$("#addd").click(function () {
+	clearInputs();
+});
 
 $("#addForm").submit(function (event) {
 	event.preventDefault();
 	postBranche();
+	closeModal();
 })
 
 //------------------DELETE TEACHER-------------------//
@@ -219,23 +227,7 @@ $("#editForm").submit(function (event) {
 	UIupdate(state.Id);
 	
 	updateFiliere(state.Id);
-	
+	closeModal();
 
 })
 
-/*document.querySelector('tbody').addEventListener('click', (e) => {
-
-	var id = e.target.parentNode.parentNode.parentNode.parentNode.id;
-	if (id) {
-		state.Id=id;
-	}
-});
-$("#editForm").submit(function (e) {
-	e.preventDefault();
-	UIupdate(state.Id);
-
-	updateTeacher(state.Id);
-	
-
-
-})*/

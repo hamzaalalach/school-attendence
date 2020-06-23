@@ -1,4 +1,11 @@
 //---------------GET TEACHERS----------------------//
+
+/*const renderBranches = (branches) => {
+	branches.forEach(element => {
+		renderBranche(element);
+	});
+
+}*/
 clearResults = () => {
 	document.querySelector('tbody').innerHTML = '';
 	document.querySelector('.pagination').innerHTML = '';
@@ -17,8 +24,7 @@ const createPagination = (page) => {
 				</li>`
 	document.querySelector('.pagination').insertAdjacentHTML('beforeend', html);
 }
-
-const renderTeacher = (e) => {
+const renderLesson = (e) => {
 	const html = `<tr id="${e._id}">
 	<td>
 	<span>
@@ -35,16 +41,12 @@ const renderTeacher = (e) => {
 	</span>
 	</span>
     </td>
-	<td class="nom">${e.nom}</td>
-	<td class="prenom">${e.prenom } </td>
-    <td class="email">${e.email}</td>
-    <td class="adresse">${e.adresse}</td>
-    <td class="telephone">${e.telephone}</td>
+	<td class="intitule">${e.intitule}</td>
+    <td class="enseignant">${$("#enseignant option[value="+e.teacher+"]").text()}</td>
 	<td>
 	  <span>
       <a
-		href="#editEmployeeModal"
-		
+        href="#editEmployeeModal"
         class="edit"
         data-toggle="modal"
         ><i
@@ -72,33 +74,32 @@ const renderTeacher = (e) => {
 	$(".edit").click(function () {
 		var $row = $(this).closest("tr");
 
-		$('input[name="nom"]').val($(".nom", $row).text());
-		$('input[name="prenom"]').val($(".prenom", $row).text());
-		$('input[name="email"]').val($(".email", $row).text());
-		$('input[name="adresse"]').val($(".adresse", $row).text());
-		$('input[name="telephone"]').val($(".telephone", $row).text());
+		$('input[name="intitule"]').val($(".intitule", $row).text());
+		//$('input[name="coordonnateur"]').val($(".coordonnateur", $row).text());
+		
 	});
 
-
-
-
 };
-const renderResults = (teachers, page = 1, resPerPage = 8) => {
+const renderResults = (branches, page = 1, resPerPage = 8) => {
 	let start, end;
 	start = (page - 1) * resPerPage;
 	end = page * resPerPage;
-	teachers.slice(start, end).forEach(element => renderTeacher(element));
+	branches.slice(start, end).forEach(element => renderLesson(element));
 	
 	createPagination(page);
 
 }
 
-class Teachers {
+
+class Lessons {
 	constructor() {}
 	async getResults() {
 		try {
-			const res = await axios.get(`http://localhost:5000/api/teachers`);
-			this.result = res.data.teachers;
+            const res = await axios.get(`http://localhost:5000/api/lessons`);
+            const t = await axios.get(`http://localhost:5000/api/teachers`);
+            this.result = res.data.lessons;
+            this.teachers=t.data.teachers;
+            console.log(this.result);
 
 		} catch (err) {
 			alert(err)
@@ -106,19 +107,31 @@ class Teachers {
 	}
 
 };
+const renderOption=(e)=>{
+	const html=`<option value="${e._id}">${e.nom+' '+e.prenom}</option>`;
+	document.getElementById('enseignant').insertAdjacentHTML('beforeend',html);
+}
+const renderSelectOptions = (teachers) => {
+	teachers.forEach(element => {
+		renderOption(element);
+	});
+
+}
+
 const state = {};
-const controlTeachers = async () => {
-	state.search = new Teachers();
+const controlBranches = async () => {
+	state.search = new Lessons();
 
 
-	await state.search.getResults();
-
-	//console.log(state.search);
-	renderResults(state.search.result);
+    await state.search.getResults();
+    renderSelectOptions(state.search.teachers);
+	renderOptions(state.search.teachers);
+    renderResults(state.search.result);
+    //console.log(state.search.result);
 
 
 }
-controlTeachers();
+controlBranches();
 
 document.querySelector('.pagination').addEventListener('click', e => {
 	const btn = e.target.closest('.page-item');
@@ -130,34 +143,27 @@ document.querySelector('.pagination').addEventListener('click', e => {
 		renderResults(state.search.result, goto);
 	}
 });
-
 //-------------------ADD TEACHER-----------------//
 
-const postTeacher = async () => {
-	const Nom = $("#nom").val();
-	const Prenom = $("#prenom").val();
-	const Email = $("#email").val();
-	const Adresse = $("#adresse").val();
-	const Telephone = $("#telephone").val();
+const postLesson = async () => {
+	const Nom = $("#intitule").val();
+	const Teacher = $("#enseignant").val();
 	try {
-		const gl = await axios.post(`http://localhost:5000/api/teachers`, {
-			nom: Nom,
-			prenom: Prenom,
-			email: Email,
-			adresse: Adresse,
-			telephone: Telephone
+		const gl = await axios.post(`http://localhost:5000/api/lessons`, {
+			intitule: Nom,
+			teacher: Teacher,
+			
 		});
-		renderTeacher(gl.data.teacher);
+        renderLesson(gl.data.lesson);
+        
 	} catch (err) {
 		alert(err)
 	}
 };
+
 const clearInputs=()=>{
-	$('#nom').val('');
-	$('#prenom').val('');
-	$('#email').val('');
-	$('#adresse').val('');
-	$('#telephone').val('');
+	$('#filiere').val('');
+	//$('#coordonnateur').val('');
 }
 const closeModal=()=>{
 	$('.modal').removeClass('in');
@@ -171,20 +177,18 @@ const closeModal=()=>{
 $("#addd").click(function () {
 	clearInputs();
 });
-$("#addForm").submit(function (event) {
 
+$("#addForm").submit(function (event) {
 	event.preventDefault();
-	
-	postTeacher();
+	postLesson();
 	closeModal();
-	
 })
 
 //------------------DELETE TEACHER-------------------//
 
 const deleteTeacher = async (id) => {
 	try {
-		await axios.delete(`http://localhost:5000/api/teachers/${id}`);
+		await axios.delete(`http://localhost:5000/api/lessons/${id}`);
 	} catch (err) {
 		alert(err)
 	}
@@ -201,39 +205,41 @@ document.querySelector('tbody').addEventListener('click', (e) => {
 
 
 //----------------UPDATE TEACHER------------------------//
-const updateTeacher = async (id) => {
-	const Nom = $('input[name="nom"]').val();
-	const Prenom = $('input[name="prenom"]').val();
-	const Email = $('input[name="email"]').val();
-	const Adresse = $('input[name="adresse"]').val();
-	const Telephone = $('input[name="telephone"]').val();
+const updateFiliere = async (id) => {
+	const Intitule = $('input[name="intitule"]').val();
+	const Teacher = $('#ens').val();
+	
 	try {
-		const gl = await axios.patch(`http://localhost:5000/api/teachers/${id}`, {
-			nom: Nom,
-			prenom: Prenom,
-			email: Email,
-			adresse: Adresse,
-			telephone: Telephone
+		const gl = await axios.patch(`http://localhost:5000/api/lessons/${id}`, {
+			intitule: Intitule,
+			teacher: Teacher,
+			
 		});
-		//UIupdate(id, gl.data.teacher);
+		
 
 	} catch (err) {
 		alert(err)
 	}
 };
-
+const render=(e)=>{
+	const html=`<option value="${e._id}">${e.nom+' '+e.prenom}</option>`;
+	//document.getElementById('filiere').insertAdjacentHTML('beforeend',html);
+	document.getElementById('ens').insertAdjacentHTML('beforeend',html);
+}
+const renderOptions = (branches) => {
+	branches.forEach(element => {
+		render(element);
+    });
+}
 const UIupdate = (id) => {
 	var $row = document.getElementById(id);
-	//console.log($row);
-	$(".nom", $row).text($('input[name="nom"]').val());
-	$(".prenom", $row).text($('input[name="prenom"]').val());
-	$(".email", $row).text($('input[name="email"]').val());
-	$(".adresse", $row).text($('input[name="adresse"]').val());
-	$(".telephone", $row).text($('input[name="telephone"]').val());
+	console.log($row);
+	$(".intitule", $row).text($('input[name="intitule"]').val());
+	$(".enseignant", $row).text($("#ens option[value="+$('#ens').val()+"]").text());
+	
 }
-
 document.querySelector('tbody').addEventListener('click', (e) => {
-
+	
 	var id = e.target.parentNode.parentNode.parentNode.parentNode.id;
 	if (id) {
 		state.Id=id;
@@ -241,9 +247,12 @@ document.querySelector('tbody').addEventListener('click', (e) => {
 	}
 });
 
-$("#editForm").submit(function (e) {
-	e.preventDefault();
-	updateTeacher(state.Id);
+$("#editForm").submit(function (event) {
+	event.preventDefault();
 	UIupdate(state.Id);
+	
+	updateFiliere(state.Id);
 	closeModal();
-});
+
+})
+

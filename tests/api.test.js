@@ -1,7 +1,7 @@
 const app = require('../index');
 const request = require('supertest');
 const db = require('../bin/db');
-const { expectCt } = require('helmet');
+const Teacher = require('../models/Teacher');
 let client;
 
 beforeAll(async () => {
@@ -78,7 +78,7 @@ describe('Teachers endpoints', () => {
 
 		expect(res.statusCode).toEqual(200);
 		expect(data.success).toBe(true);
-		expect(data.totalTeachers).toBe(2);
+		expect(data.totalTeachers).toBe(3);
 		expect(data).toHaveProperty('teachers');
 		done();
 	});
@@ -209,7 +209,10 @@ describe('Lessons endpoints', () => {
 		expect(data).toHaveProperty('lesson');
 		expect(data.lesson.intitule).toBe('Cours 1');
 		id = data.lesson._id;
-		done();
+		Teacher.findById(data.lesson.teacher, (err, teacher) => {
+			expect(teacher.courses).toContain(id);
+			done();
+		});
 	});
 
 	it('Should return 422 on post lessons missing data', async done => {
@@ -282,7 +285,10 @@ describe('Lessons endpoints', () => {
 		expect(data.success).toBe(true);
 		expect(data).toHaveProperty('lesson');
 		expect(data.lesson._id).toBe(id);
-		done();
+		Teacher.findById(data.lesson.teacher, (err, teacher) => {
+			expect(teacher.courses).not.toContain(id);
+			done();
+		});
 	});
 
 	it('Should return 404 on delete lessons wrong id', async done => {
@@ -365,7 +371,7 @@ describe('Sessions endpoints', () => {
 		expect(res.statusCode).toEqual(200);
 		expect(data.success).toBe(true);
 		expect(data).toHaveProperty('sessions');
-		expect(data.totalSessions).toBe(1);
+		expect(data.totalSessions).toBe(2);
 		done();
 	});
 
@@ -479,7 +485,7 @@ describe('Students endpoints', () => {
 		expect(res.statusCode).toEqual(200);
 		expect(data.success).toBe(true);
 		expect(data).toHaveProperty('students');
-		expect(data.totalStudents).toBe(1);
+		expect(data.totalStudents).toBe(2);
 		done();
 	});
 
@@ -502,6 +508,64 @@ describe('Students endpoints', () => {
 		expect(data.success).toBe(false);
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
+		done();
+	});
+});
+
+describe('Presence Endpoints', () => {
+	let id;
+
+	it('Should return 200 on post presences', async done => {
+		const res = await client.post('/api/presences').send({
+			studentId: '5ef76589b22d4c4854f3e6aa',
+			sessionId: '5ef76610b22d4c4854f3e6ab',
+			present: false
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('presence');
+		expect(data.presence.studentId).toBe('5ef76589b22d4c4854f3e6aa');
+		expect(data.presence.sessionId).toBe('5ef76610b22d4c4854f3e6ab');
+		expect(data.presence.present).toBe(false);
+		id = data.presence._id;
+		done();
+	});
+
+	it('Should return 200 on patch presences', async done => {
+		const res = await client.patch('/api/presences/' + id).send({
+			present: true
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('presence');
+		expect(data.presence.present).toBe(true);
+		expect(data.presence._id).toBe(id);
+		done();
+	});
+
+	it('Should return 200 on get presences', async done => {
+		const res = await client.get('/api/presences/5ef76610b22d4c4854f3e6ab');
+		const data = res.body;
+
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('presences');
+		expect(data.totalPresences).toBe(1);
+		done();
+	});
+
+	it('Should return 200 on delete presences', async done => {
+		const res = await client.delete('/api/presences/' + id);
+		const data = res.body;
+
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('presence');
+		expect(data.presence._id).toBe(id);
 		done();
 	});
 });

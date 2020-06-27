@@ -2,11 +2,11 @@ const mongoose = require('mongoose');
 
 const PresenceSchema = new mongoose.Schema({
 	studentId: {
-		type: ObjectId,
+		type: String,
 		required: true
 	},
 	sessionId: {
-		type: ObjectId,
+		type: String,
 		required: true
 	},
 	present: {

@@ -42,7 +42,12 @@ const renderLesson = (e) => {
 	</span>
     </td>
 	<td class="intitule">${e.intitule}</td>
-    <td class="enseignant">${$("#enseignant option[value="+e.teacher+"]").text()}</td>
+	<td class="enseignant">${$("#enseignant option[value="+e.teacher+"]").text()}</td>
+	<td class="view"><span><span><a href="#displayEmployeeModal"
+	
+	data-toggle="modal"
+	
+	><ion-icon name="eye-outline"></ion-icon></a></span></span></td>
 	<td>
 	  <span>
       <a
@@ -96,9 +101,11 @@ class Lessons {
 	async getResults() {
 		try {
             const res = await axios.get(`http://localhost:5000/api/lessons`);
-            const t = await axios.get(`http://localhost:5000/api/teachers`);
+			const t = await axios.get(`http://localhost:5000/api/teachers`);
+			const b=await axios.get(`http://localhost:5000/api/branches`);
             this.result = res.data.lessons;
-            this.teachers=t.data.teachers;
+			this.teachers=t.data.teachers;
+			this.branches=b.data.branches;
             console.log(this.result);
 
 		} catch (err) {
@@ -117,6 +124,19 @@ const renderSelectOptions = (teachers) => {
 	});
 
 }
+const renderBrancheOption=(e)=>{
+	const html=`<label for="${e._id}">
+	<input type="checkbox" id="${e._id}" value="${e._id}"/> ${e.label}</label>`;
+	
+	document.getElementById('checkboxes').insertAdjacentHTML('beforeend',html);
+	//document.getElementById('.filiere').insertAdjacentHTML('beforeend',html);
+}
+const renderMultilist = (branches) => {
+	branches.forEach(element => {
+		renderBrancheOption(element);
+	});
+
+}
 
 const state = {};
 const controlBranches = async () => {
@@ -124,7 +144,8 @@ const controlBranches = async () => {
 
 
     await state.search.getResults();
-    renderSelectOptions(state.search.teachers);
+	renderSelectOptions(state.search.teachers);
+	renderMultilist(state.search.branches);
 	renderOptions(state.search.teachers);
     renderResults(state.search.result);
     //console.log(state.search.result);

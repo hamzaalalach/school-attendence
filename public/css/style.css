@@ -12284,3 +12284,40 @@ table.table .avatar {
 .modal form label {
   font-weight: normal;
 }
+ion-icon{
+  color: #00BFA6;
+  font-size: 22px;
+  
+}
+.view{
+  text-align: center;
+}
+
+.view a{
+  cursor: pointer;
+}
+
+
+.selectBox {
+  position: relative;
+}
+
+
+
+.overSelect {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+}
+
+#checkboxes {
+  display: none;
+  border: 1px #dadada solid;
+}
+
+#checkboxes label {
+  display: block;
+}
+

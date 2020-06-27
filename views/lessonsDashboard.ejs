@@ -43,6 +43,8 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     />
+
+    
     <link rel="stylesheet" href="../css/style.css" />
   </head>
 
@@ -62,17 +64,10 @@
             >
           </h1>
           <ul class="list-unstyled components mb-5">
-            
             <li class="active">
-              <a href="/dashboard/lessons"
-                ><span class="fa fa-cogs mr-3"></span>Gestion des leçons</a
-              >
+              <a href="#"><span class="fa fa-home mr-3"></span> Home</a>
             </li>
-            <li  >
-              <a href="/dashboard/sessions"
-                ><span class="fa fa-cogs mr-3"></span>Gestion des séances</a>
-            </li>
-
+          
             
             <li>
               <a class="logout_btn" href="#"
@@ -121,6 +116,7 @@
                   </th>
                   <th >Intitulé</th>
                   <th >Enseignant</th>
+                  <th class="view">Filières</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -168,6 +164,23 @@
                         <option disabled selected> Enseignant</option>
                     </select>
                   </div>
+                  <div class="form-group">
+                    <label>Filières</label>
+                    <form>
+                      <div class="multiselect">
+                        <div class="selectBox" onclick="showCheckboxes()">
+                          <select class="form-control">
+                            <option>Filière</option>
+                          </select>
+                          <div class="overSelect"></div>
+                        </div>
+                        <div id="checkboxes">
+                         
+                        </div>
+                      </div>
+                    </form>
+                  </div>
+        
                   
                 </div>
                 <div class="modal-footer">
@@ -287,6 +300,7 @@
     <script src="../js/lessons.js"></script>
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
+    <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   </body>
 </html>

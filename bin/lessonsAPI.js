@@ -1,4 +1,5 @@
 const Lesson = require('../models/Lesson');
+const Teacher = require('../models/Teacher');
 
 exports.getLessons = cb => {
 	Lesson.find({}, (err, lessons) => {
@@ -16,7 +17,21 @@ exports.createLesson = (data, cb) => {
 			cb({ status: 422 });
 		} else {
 			new Lesson(data).save((err, lesson) => {
-				err ? cb({ status: 500 }) : cb(null, lesson);
+				if (err) {
+					cb({ status: 500 });
+				} else {
+					Teacher.updateOne(
+						{ _id: lesson.teacher },
+						{
+							$push: {
+								courses: new String(lesson._id)
+							}
+						},
+						err => {
+							err ? cb({ status: 404 }) : cb(null, lesson);
+						}
+					);
+				}
 			});
 		}
 	});
@@ -39,6 +54,20 @@ exports.updateLesson = (id, data, cb) => {
 
 exports.deleteLesson = (id, cb) => {
 	Lesson.findOneAndRemove({ _id: id }, (err, lesson) => {
-		err ? cb(err) : cb(null, lesson);
+		if (err) {
+			cb(err);
+		} else {
+			Teacher.updateOne(
+				{ _id: lesson.teacher },
+				{
+					$pull: {
+						courses: new String(lesson._id)
+					}
+				},
+				err => {
+					err ? cb(err) : cb(null, lesson);
+				}
+			);
+		}
 	});
 };

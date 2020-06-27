@@ -34,8 +34,8 @@
 				<h1><a href="index.html" class="logo">Gestion des <span>Absences</span></a></h1>
 				<ul class="list-unstyled components mb-5">
 					<li>
-                        <a href="/dashboard/lessons"
-                          ><span class="fa fa-cogs mr-3"></span>Gestion des leçons</a
+                        <a href="/dashboard/students"
+                          ><span class="fa fa-cogs mr-3"></span>Gestion des étudiants</a
                         >
                       </li>
                       <li  class="active">
@@ -88,49 +88,7 @@
 							</tr>
 						</thead>
 						<tbody>
-							<!--<tr>
-								<td>
-									<span class="custom-checkbox">
-										<input type="checkbox" id="checkbox1" name="options[]" value="1">
-										<label for="checkbox1"></label>
-									</span>
-								</td>
-								<td class="matricule">M55485</td>
-								<td class="nom">ziane abderrahim</td>
-								<td class="email">ziane@gmail.com</td>
-								<td class="adresse">hay rahma, dakhla</td>
-
-								<td>
-									<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
-											class="material-icons" data-toggle="tooltip"
-											title="Modifier">&#xE254;</i></a>
-									<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i
-											class="material-icons" data-toggle="tooltip"
-											title="Supprimer">&#xE872;</i></a>
-								</td>
-							</tr>
-							<tr>
-								<td>
-									<span class="custom-checkbox">
-										<input type="checkbox" id="checkbox2" name="options[]" value="1">
-										<label for="checkbox2"></label>
-									</span>
-								</td>
-								<td class="matricule">M458485</td>
-								<td class="nom">alalach hamza</td>
-								<td class="email">hamza@gmail.com</td>
-								<td class="adresse">hay rahma, taounat</td>
-
-								<td>
-									<a href="#editEmployeeModal" class="edit" data-toggle="modal"><i
-											class="material-icons" data-toggle="tooltip"
-											title="Modifier">&#xE254;</i></a>
-									<a href="#deleteEmployeeModal" class="delete" data-toggle="modal"><i
-											class="material-icons" data-toggle="tooltip"
-											title="Supprimer">&#xE872;</i></a>
-								</td>
-							</tr>-->
-
+							
 
 						</tbody>
 					</table>
@@ -165,7 +123,15 @@
 								</div>
 								<div class="form-group">
 									<label>Heure</label>
-									<input type="text" id="heure" class="form-control" required>
+									<!--<input type="text" id="heure" class="form-control" required>-->
+									<select id="heure" class="form-control" >
+										<option value="" disabled selected>Heure</option>
+										<option value="08 - 10">08 - 10</option>
+										<option value="10 - 12">10 - 12</option>
+										<option value="14 - 16">14 - 16</option>
+										<option value="16 - 18">16 - 18</option>
+
+									</select>
 								</div>
 								<div class="form-group">
 									<label>Date</label>

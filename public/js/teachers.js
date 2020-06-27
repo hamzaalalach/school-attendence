@@ -39,7 +39,12 @@ const renderTeacher = (e) => {
 	<td class="prenom">${e.prenom } </td>
     <td class="email">${e.email}</td>
     <td class="adresse">${e.adresse}</td>
-    <td class="telephone">${e.telephone}</td>
+	<td class="telephone">${e.telephone}</td>
+	<td class="view"><span><span><a href="#displayEmployeeModal"
+	
+	data-toggle="modal"
+	
+	><ion-icon name="eye-outline"></ion-icon></a></span></span></td>
 	<td>
 	  <span>
       <a
@@ -83,6 +88,13 @@ const renderTeacher = (e) => {
 
 
 };
+const renderLessons=(t,id)=>{
+	t.forEach(element =>{
+		if(element.teacher==id){
+			document.querySelector('.displayLessons').insertAdjacentHTML('beforeend',`<li>${element.intitule}</li>`)
+		}
+	});
+}
 const renderResults = (teachers, page = 1, resPerPage = 8) => {
 	let start, end;
 	start = (page - 1) * resPerPage;
@@ -98,7 +110,10 @@ class Teachers {
 	async getResults() {
 		try {
 			const res = await axios.get(`http://localhost:5000/api/teachers`);
+			const l = await axios.get(`http://localhost:5000/api/lessons`);
 			this.result = res.data.teachers;
+			this.lessons=l.data.lessons;
+			console.log(this.lessons);
 
 		} catch (err) {
 			alert(err)
@@ -115,6 +130,7 @@ const controlTeachers = async () => {
 
 	//console.log(state.search);
 	renderResults(state.search.result);
+	renderLessons(state.search.lessons,state.IDd);
 
 
 }
@@ -192,6 +208,7 @@ const deleteTeacher = async (id) => {
 
 document.querySelector('tbody').addEventListener('click', (e) => {
 	var id = e.target.parentNode.parentNode.parentNode.id;
+	
 	if (id) {
 
 		deleteTeacher(id);
@@ -235,8 +252,15 @@ const UIupdate = (id) => {
 document.querySelector('tbody').addEventListener('click', (e) => {
 
 	var id = e.target.parentNode.parentNode.parentNode.parentNode.id;
+	var I = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.id;
+	document.querySelector('.displayLessons').innerHTML='';
+	renderLessons(state.search.lessons,I);
+	//console.log(state.IDd);
 	if (id) {
 		state.Id=id;
+		
+		
+		
 		
 	}
 });

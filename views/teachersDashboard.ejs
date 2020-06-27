@@ -125,6 +125,7 @@
                   <th>Email</th>
                   <th>Adresse</th>
                   <th>Téléphone</th>
+                  <th>Cours</th>
                   <th>Actions</th>
                 </tr>
               </thead>
@@ -304,11 +305,43 @@
             </div>
           </div>
         </div>
-        <!-- Delete Modal HTML 
-        <div id="deleteEmployeeModal" class="modal fade">
+        <div id="displayEmployeeModal" class="modal fade">
           <div class="modal-dialog">
             <div class="modal-content">
-              <form id="deleteForm">
+                <div class="modal-header">
+                  <h4 class="modal-title">Cours</h4>
+                  <button
+                    type="button"
+                    class="close"
+                    data-dismiss="modal"
+                    aria-hidden="true"
+                  >
+                    &times;
+                  </button>
+                </div>
+                <div class="modal-body">
+                  <ul class="displayLessons">
+                    
+                    
+                  </ul>
+                </div>
+                <div class="modal-footer">
+                  <input
+                    type="button"
+                    class="btn btn-default"
+                    data-dismiss="modal"
+                    value="Fermer"
+                  />
+                  
+                </div>
+              
+            </div>
+          </div>
+        </div>
+        <!-- Delete Modal HTML 
+        <div id="displaEmployeeModal" class="modal fade">
+          <div class="modal-dialog">
+            <div class="modal-content">
                 <div class="modal-header">
                   <h4 class="modal-title">Supprimer Enseignant</h4>
                   <button
@@ -333,13 +366,9 @@
                     data-dismiss="modal"
                     value="Annuler"
                   />
-                  <input
-                    type="submit"
-                    class="btn btn-danger"
-                    value="supprimer"
-                  />
+                  
                 </div>
-              </form>
+              
             </div>
           </div>
         </div>
@@ -356,7 +385,7 @@
     
 
     
-    
+    <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
     
   </body>

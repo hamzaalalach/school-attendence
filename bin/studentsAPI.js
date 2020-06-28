@@ -1,4 +1,5 @@
 const Student = require('../models/Student');
+const Branch = require('../models/Branch');
 
 exports.getStudents = cb => {
 	Student.find({}, (err, students) => {
@@ -16,7 +17,21 @@ exports.createStudent = (data, cb) => {
 			cb({ status: 422 });
 		} else {
 			new Student(data).save((err, student) => {
-				err ? cb({ status: 500, message: err }) : cb(null, student);
+				if (err) {
+					cb({ status: 500 });
+				} else {
+					Branch.updateOne(
+						{ _id: student.branch },
+						{
+							$push: {
+								students: new String(student._id)
+							}
+						},
+						err => {
+							err ? cb({ status: 500, message: err }) : cb(null, student);
+						}
+					);
+				}
 			});
 		}
 	});
@@ -39,6 +54,20 @@ exports.updateStudent = (id, data, cb) => {
 
 exports.deleteStudent = (id, cb) => {
 	Student.findOneAndRemove({ _id: id }, (err, student) => {
-		err ? cb(err) : cb(null, student);
+		if (err) {
+			cb({ status: 404 });
+		} else {
+			Branch.updateOne(
+				{ _id: student.branch },
+				{
+					$pull: {
+						students: new String(student._id)
+					}
+				},
+				err => {
+					err ? cb({ status: 500, message: err }) : cb(null, student);
+				}
+			);
+		}
 	});
 };

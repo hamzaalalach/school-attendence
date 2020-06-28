@@ -10,7 +10,7 @@ exports.getLessons = cb => {
 exports.createLesson = (data, cb) => {
 	Lesson.find({ intitule: data.intitule }, (err, exists) => {
 		if (err) {
-			cb({ status: 500 });
+			cb({ status: 500, message: err });
 		} else if (exists.length != 0) {
 			cb({ status: 409 });
 		} else if (!data.intitule || !data.teacher) {
@@ -18,7 +18,7 @@ exports.createLesson = (data, cb) => {
 		} else {
 			new Lesson(data).save((err, lesson) => {
 				if (err) {
-					cb({ status: 500 });
+					cb({ status: 500, message: err });
 				} else {
 					Teacher.updateOne(
 						{ _id: lesson.teacher },
@@ -28,7 +28,7 @@ exports.createLesson = (data, cb) => {
 							}
 						},
 						err => {
-							err ? cb({ status: 404 }) : cb(null, lesson);
+							err ? cb({ status: 500, message: err }) : cb(null, lesson);
 						}
 					);
 				}
@@ -55,7 +55,7 @@ exports.updateLesson = (id, data, cb) => {
 exports.deleteLesson = (id, cb) => {
 	Lesson.findOneAndRemove({ _id: id }, (err, lesson) => {
 		if (err) {
-			cb(err);
+			cb({ status: 404 });
 		} else {
 			Teacher.updateOne(
 				{ _id: lesson.teacher },
@@ -65,7 +65,7 @@ exports.deleteLesson = (id, cb) => {
 					}
 				},
 				err => {
-					err ? cb(err) : cb(null, lesson);
+					err ? cb({ status: 500, message: err }) : cb(null, lesson);
 				}
 			);
 		}

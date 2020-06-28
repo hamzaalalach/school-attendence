@@ -2,6 +2,8 @@ const app = require('../index');
 const request = require('supertest');
 const db = require('../bin/db');
 const Teacher = require('../models/Teacher');
+const Branch = require('../models/Branch');
+const Lesson = require('../models/Lesson');
 let client;
 
 beforeAll(async () => {
@@ -226,7 +228,7 @@ describe('Lessons endpoints', () => {
 		done();
 	});
 
-	it('Should return 422 on post lessons duplicated intitule', async done => {
+	it('Should return 409 on post lessons duplicated intitule', async done => {
 		const res = await client.post('/api/lessons').send({
 			intitule: 'Cours 1',
 			teacher: '5eea9cc11339ef1a79207a9c'
@@ -323,7 +325,10 @@ describe('Sessions endpoints', () => {
 		expect(data.session).toHaveProperty('date');
 		expect(data.session.lesson).toBe('5eea9d099924bc1ac34ca553');
 		id = data.session._id;
-		done();
+		Lesson.findById(data.session.lesson, (err, lesson) => {
+			expect(lesson.sessions).toContain(id);
+			done();
+		});
 	});
 
 	it('Should return 422 on post sessions missing data', async done => {
@@ -383,7 +388,10 @@ describe('Sessions endpoints', () => {
 		expect(data.success).toBe(true);
 		expect(data).toHaveProperty('session');
 		expect(data.session._id).toBe(id);
-		done();
+		Lesson.findById(data.session.lesson, (err, lesson) => {
+			expect(lesson.sessions).not.toContain(id);
+			done();
+		});
 	});
 
 	it('Should return 404 on delete sessions wrong id', async done => {
@@ -406,20 +414,22 @@ describe('Students endpoints', () => {
 			matricule: '032898A',
 			nom: 'Alalach',
 			prenom: 'Hamza',
-			branch: '5eed4e0faf7fd6725e0ee7b8'
+			branch: '5eee377aa11b254d845a3b26'
 		});
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(200);
 		expect(data.success).toBe(true);
 		expect(data).toHaveProperty('student');
-		expect(data.student.branch).toBe('5eed4e0faf7fd6725e0ee7b8');
+		expect(data.student.branch).toBe('5eee377aa11b254d845a3b26');
 		expect(data.student.matricule).toBe('032898A');
 		expect(data.student.nom).toBe('Alalach');
 		expect(data.student.prenom).toBe('Hamza');
-
 		id = data.student._id;
-		done();
+		Branch.findById(data.student.branch, (err, branch) => {
+			expect(branch.students).toContain(id);
+			done();
+		});
 	});
 
 	it('Should return 422 on post students missing data', async done => {
@@ -433,12 +443,12 @@ describe('Students endpoints', () => {
 		done();
 	});
 
-	it('Should return 422 on post students duplicated matricule', async done => {
+	it('Should return 409 on post students duplicated matricule', async done => {
 		const res = await client.post('/api/students').send({
 			matricule: '032898A',
 			nom: 'nom',
 			prenom: 'prenom',
-			branch: '5eed4e0faf7fd6725e0ee7b8'
+			branch: '5eee377aa11b254d845a3b26'
 		});
 		const data = res.body;
 
@@ -497,7 +507,10 @@ describe('Students endpoints', () => {
 		expect(data.success).toBe(true);
 		expect(data).toHaveProperty('student');
 		expect(data.student._id).toBe(id);
-		done();
+		Branch.findById(data.student.branch, (err, branch) => {
+			expect(branch.students).not.toContain(id);
+			done();
+		});
 	});
 
 	it('Should return 404 on delete students wrong id', async done => {
@@ -533,6 +546,35 @@ describe('Presence Endpoints', () => {
 		done();
 	});
 
+	it('Should return 409 on post presences duplicated record', async done => {
+		const res = await client.post('/api/presences').send({
+			studentId: '5ef76589b22d4c4854f3e6aa',
+			sessionId: '5ef76610b22d4c4854f3e6ab',
+			present: true
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(409);
+		expect(data.success).toBe(false);
+		expect(data.error).toBe(409);
+		expect(data.message).toBe('Conflict');
+		done();
+	});
+
+	it('Should return 422 on post presences missing data', async done => {
+		const res = await client.post('/api/presences').send({
+			studentId: '5ef76589b22d4c4854f3e6aa',
+			sessionId: '5ef76610b22d4c4854f3e6ac'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(422);
+		expect(data.success).toBe(false);
+		expect(data.error).toBe(422);
+		expect(data.message).toBe('unprocessable');
+		done();
+	});
+
 	it('Should return 200 on patch presences', async done => {
 		const res = await client.patch('/api/presences/' + id).send({
 			present: true
@@ -547,6 +589,19 @@ describe('Presence Endpoints', () => {
 		done();
 	});
 
+	it('Should return 404 on patch presences wrong id', async done => {
+		const res = await client.patch('/api/presences/1').send({
+			present: true
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(404);
+		expect(data.success).toBe(false);
+		expect(data.message).toBe('Not Found');
+		expect(data.error).toBe(404);
+		done();
+	});
+
 	it('Should return 200 on get presences', async done => {
 		const res = await client.get('/api/presences/5ef76610b22d4c4854f3e6ab');
 		const data = res.body;
@@ -555,6 +610,17 @@ describe('Presence Endpoints', () => {
 		expect(data.success).toBe(true);
 		expect(data).toHaveProperty('presences');
 		expect(data.totalPresences).toBe(1);
+		done();
+	});
+
+	it('Should return 404 on wrong session id', async done => {
+		const res = await client.get('/api/presences/1');
+		const data = res.body;
+
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBe(false);
+		expect(data.message).toBe('Not Found');
+		expect(data.error).toBe(404);
 		done();
 	});
 

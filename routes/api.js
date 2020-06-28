@@ -169,8 +169,10 @@ router.patch('/lessons/:id', (req, res) => {
 
 router.delete('/lessons/:id', (req, res) => {
 	lessonsAPI.deleteLesson(req.params.id, (err, lesson) => {
-		if (err) {
+		if (err && err.status === 404) {
 			abort.notFound(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
 		} else {
 			res.status(200).json({
 				success: true,
@@ -226,8 +228,10 @@ router.patch('/sessions/:id', (req, res) => {
 
 router.delete('/sessions/:id', (req, res) => {
 	sessionsAPI.deleteSession(req.params.id, (err, session) => {
-		if (err) {
+		if (err && err.status === 404) {
 			abort.notFound(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
 		} else {
 			res.status(200).json({
 				success: true,
@@ -285,8 +289,10 @@ router.patch('/students/:id', (req, res) => {
 
 router.delete('/students/:id', (req, res) => {
 	studentsAPI.deleteStudent(req.params.id, (err, student) => {
-		if (err) {
+		if (err && err.status === 404) {
 			abort.notFound(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
 		} else {
 			res.status(200).json({
 				success: true,
@@ -298,8 +304,10 @@ router.delete('/students/:id', (req, res) => {
 
 router.get('/presences/:sessionId', (req, res) => {
 	presencesAPI.getPresences(req.params.sessionId, (err, presences) => {
-		if (err) {
+		if (err && err.status === 404) {
 			abort.notFound(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
 		} else {
 			res.status(200).json({
 				success: true,

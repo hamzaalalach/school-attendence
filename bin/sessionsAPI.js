@@ -1,5 +1,5 @@
 const Session = require('../models/Session');
-const { session } = require('passport/lib');
+const Lesson = require('../models/Lesson');
 
 exports.getSessions = cb => {
 	Session.find({}, (err, sessions) => {
@@ -12,7 +12,21 @@ exports.createSession = (data, cb) => {
 		cb({ status: 422 });
 	} else {
 		new Session(data).save((err, session) => {
-			err ? cb({ status: 500, message: err }) : cb(null, session);
+			if (err) {
+				cb({ status: 500, message: err });
+			} else {
+				Lesson.updateOne(
+					{ _id: session.lesson },
+					{
+						$push: {
+							sessions: new String(session._id)
+						}
+					},
+					err => {
+						err ? cb({ status: 500, message: err }) : cb(null, session);
+					}
+				);
+			}
 		});
 	}
 };
@@ -34,6 +48,20 @@ exports.updateSession = (id, data, cb) => {
 
 exports.deleteSession = (id, cb) => {
 	Session.findOneAndRemove({ _id: id }, (err, session) => {
-		err ? cb({ status: 404 }) : cb(null, session);
+		if (err) {
+			cb({ status: 404 });
+		} else {
+			Lesson.updateOne(
+				{ _id: session.lesson },
+				{
+					$pull: {
+						sessions: new String(session._id)
+					}
+				},
+				err => {
+					err ? cb({ status: 500, message: err }) : cb(null, session);
+				}
+			);
+		}
 	});
 };

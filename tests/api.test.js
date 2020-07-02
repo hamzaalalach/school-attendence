@@ -4,6 +4,7 @@ const db = require('../bin/db');
 const Teacher = require('../models/Teacher');
 const Branch = require('../models/Branch');
 const Lesson = require('../models/Lesson');
+const { expectCt } = require('helmet');
 let client;
 
 beforeAll(async () => {
@@ -242,6 +243,36 @@ describe('Lessons endpoints', () => {
 		done();
 	});
 
+	it('Should return 200 on post branch to lesson', async done => {
+		const res = await client.post('/api/lessons/' + id + '/branches').send({
+			id: '5efa8273b609b86631715ab5'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('lesson');
+		expect(data.lesson.branches).toContain('5efa8273b609b86631715ab5');
+		Branch.findById('5efa8273b609b86631715ab5', (err, branch) => {
+			expect(branch.lessons).toContain(id);
+			done();
+		});
+	});
+
+	it('Should return 200 on delete branch from lesson', async done => {
+		const res = await client.delete('/api/lessons/' + id + '/branches/5efa8273b609b86631715ab5');
+		const data = res.body;
+
+		expect(res.statusCode).toEqual(200);
+		expect(data.success).toBe(true);
+		expect(data).toHaveProperty('lesson');
+		expect(data.lesson.branches).not.toContain('5efa8273b609b86631715ab5');
+		Branch.findById('5efa8273b609b86631715ab5', (err, branch) => {
+			expect(branch.lessons).not.toContain(id);
+			done();
+		});
+	});
+
 	it('Should return 200 on patch lessons', async done => {
 		const res = await client.patch('/api/lessons/' + id).send({
 			intitule: 'Cours 2'
@@ -414,14 +445,14 @@ describe('Students endpoints', () => {
 			matricule: '032898A',
 			nom: 'Alalach',
 			prenom: 'Hamza',
-			branch: '5eee377aa11b254d845a3b26'
+			branch: '5efa8273b609b86631715ab5'
 		});
 		const data = res.body;
 
 		expect(res.statusCode).toEqual(200);
 		expect(data.success).toBe(true);
 		expect(data).toHaveProperty('student');
-		expect(data.student.branch).toBe('5eee377aa11b254d845a3b26');
+		expect(data.student.branch).toBe('5efa8273b609b86631715ab5');
 		expect(data.student.matricule).toBe('032898A');
 		expect(data.student.nom).toBe('Alalach');
 		expect(data.student.prenom).toBe('Hamza');
@@ -448,7 +479,7 @@ describe('Students endpoints', () => {
 			matricule: '032898A',
 			nom: 'nom',
 			prenom: 'prenom',
-			branch: '5eee377aa11b254d845a3b26'
+			branch: '5efa8273b609b86631715ab5'
 		});
 		const data = res.body;
 

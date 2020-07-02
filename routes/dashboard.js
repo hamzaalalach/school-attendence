@@ -22,4 +22,16 @@ router.get('/sessions', ensureAuthenticated, (req, res) => {
 	canAccess(req.user, 'sessions') ? res.render('sessionsDashboard') : res.redirect('/');
 });
 
+router.get('/sessions', ensureAuthenticated, (req, res) => {
+	canAccess(req.user, 'sessions') ? res.render('sessionsDashboard') : res.redirect('/');
+});
+
+router.get('/presences', ensureAuthenticated, (req, res) => {
+	canAccess(req.user, 'presence') ? res.render('presencesDashboard') : res.redirect('/');
+});
+
+router.get('/presences-list', ensureAuthenticated, (req, res) => {
+	canAccess(req.user, 'presence') ? res.render('listDashboard') : res.redirect('/');
+});
+
 module.exports = router;

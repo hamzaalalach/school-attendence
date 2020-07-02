@@ -19,7 +19,7 @@
 	});
 
 })(jQuery);
-$(document).ready(function () {
+/*$(document).ready(function () {
 	// Activate tooltip
 	$('[data-toggle="tooltip"]').tooltip();
 

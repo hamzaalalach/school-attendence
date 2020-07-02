@@ -43,8 +43,6 @@
       rel="stylesheet"
       href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
     />
-
-    
     <link rel="stylesheet" href="../css/style.css" />
   </head>
 
@@ -64,11 +62,16 @@
             >
           </h1>
           <ul class="list-unstyled components mb-5">
-            <li class="active">
-              <a href="#"><span class="fa fa-home mr-3"></span> Home</a>
-            </li>
-          
             
+            <li class="active">
+              <a href="/dashboard/list"
+                ><span class="fa fa-cogs mr-3"></span>Créer une liste</a
+              >
+            </li>
+            <li  >
+              <a href="/dashboard/presence"
+                ><span class="fa fa-cogs mr-3"></span>Liste de présence</a>
+            </li>
             <li>
               <a class="logout_btn" href="#"
                 ><span class="fa fa-sign-out mr-3"></span> Se déconnecter</a
@@ -85,7 +88,10 @@
             <div class="table-title">
               <div class="row">
                 <div class="col-sm-6">
-                  <h2>Gestion des <b>Cours</b></h2>
+                  <h2 style="text-align: right;">Liste de <b>Présence</b></h2>
+                  <br>
+                  <br>
+                  
                 </div>
                 <div class="col-sm-6">
                   <a id="addd"
@@ -93,32 +99,16 @@
                     class="btn btn-success"
                     data-toggle="modal"
                     ><i class="material-icons">&#xE147;</i>
-                    <span>Ajouter Cours</span></a
+                    <span>Créer Liste</span></a
                   >
-                  <a
-                    href="#deleteEmployeeModal"
-                    class="btn btn-danger"
-                    data-toggle="modal"
-                    ><i class="material-icons">&#xE15C;</i>
-                    <span>Supprimer</span></a
-                  >
+                  
                 </div>
               </div>
             </div>
+            <div class="coordonner" ></div>
             <table class="table table-striped table-hover">
               <thead>
-                <tr>
-                  <th>
-                    <span class="custom-checkbox">
-                      <input type="checkbox" id="selectAll" />
-                      <label for="selectAll"></label>
-                    </span>
-                  </th>
-                  <th >Intitulé</th>
-                  <th >Enseignant</th>
-                  <!--<th class="view">Filières</th>-->
-                  <th>Actions</th>
-                </tr>
+                
               </thead>
               <tbody>
                 
@@ -138,7 +128,7 @@
             <div class="modal-content">
               <form id="addForm">
                 <div class="modal-header">
-                  <h4 class="modal-title">Ajouter Cours</h4>
+                  <h4 class="modal-title">Créer Liste</h4>
                   <button
                     type="button"
                     class="close"
@@ -150,37 +140,23 @@
                 </div>
                 <div class="modal-body">
                   <div class="form-group">
-                    <label>Intitulé</label>
-                    <input id="intitule"
-                      type="text"
-                      
-                      class="form-control"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>Enseignant</label>
-                    <select id="enseignant" class="form-control">
-                        <option disabled selected> Enseignant</option>
+                    <label>Filière</label>
+                    <select id="filiere" class="form-control" required>
+                        <option value="" disabled selected>Filière</option>
                     </select>
                   </div>
-                  <!--<div class="form-group">
-                    <label>Filières</label>
-                    <form>
-                      <div class="multiselect">
-                        <div class="selectBox" onclick="showCheckboxes()">
-                          <select class="form-control">
-                            <option>Filière</option>
-                          </select>
-                          <div class="overSelect"></div>
-                        </div>
-                        <div id="checkboxes">
-                         
-                        </div>
-                      </div>
-                    </form>
-                  </div>-->
-        
+                  <div class="form-group">
+                    <label>Cours</label>
+                    <select id="cours" class="form-control" required>
+                        <option value="" disabled selected>Cours</option>
+                    </select>
+                  </div>
+                  <div class="form-group">
+                    <label>Séance</label>
+                    <select id="session" class="form-control" required>
+                        <option value="" disabled selected>Séance</option>
+                    </select>
+                  </div>
                   
                 </div>
                 <div class="modal-footer">
@@ -206,7 +182,7 @@
             <div class="modal-content">
               <form id="editForm">
                 <div class="modal-header">
-                  <h4 class="modal-title">Modifier Cours</h4>
+                  <h4 class="modal-title">Modifier Filière</h4>
                   <button
                     type="button"
                     class="close"
@@ -218,17 +194,22 @@
                 </div>
                 <div class="modal-body">
                   <div class="form-group">
-                    <label>Intitulé</label>
+                    <label>Filière</label>
                     <input
                       type="text"
-                      name="intitule"
+                      name="filiere"
                       class="form-control"
                       required
                     />
                   </div>
                   <div class="form-group">
-                    <label>Enseignant</label>
-                    <select  id="ens" class="form-control"></select>
+                    <label>session</label>
+                    <input
+                      type="text"
+                      name="session"
+                      class="form-control"
+                      required
+                    />
                   </div>
                   
                 </div>
@@ -297,10 +278,9 @@
     <script src="../js/popper.js"></script>
     <script src="../js/bootstrap.min.js"></script>
     <script src="../js/main.js"></script>
-    <script src="../js/lessons.js"></script>
+    <script src="../js/pres.js"></script>
     <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
-    <script src="https://unpkg.com/ionicons@5.1.2/dist/ionicons.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
   </body>
 </html>

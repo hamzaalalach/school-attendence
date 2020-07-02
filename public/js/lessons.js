@@ -5,7 +5,12 @@
 		renderBranche(element);
 	});
 
-}*/
+}
+<td class="view"><span><span><a href="#displayEmployeeModal"
+	
+	data-toggle="modal"
+	
+	><ion-icon name="eye-outline"></ion-icon></a></span></span></td>*/
 clearResults = () => {
 	document.querySelector('tbody').innerHTML = '';
 	document.querySelector('.pagination').innerHTML = '';
@@ -43,11 +48,7 @@ const renderLesson = (e) => {
     </td>
 	<td class="intitule">${e.intitule}</td>
 	<td class="enseignant">${$("#enseignant option[value="+e.teacher+"]").text()}</td>
-	<td class="view"><span><span><a href="#displayEmployeeModal"
 	
-	data-toggle="modal"
-	
-	><ion-icon name="eye-outline"></ion-icon></a></span></span></td>
 	<td>
 	  <span>
       <a
@@ -145,7 +146,7 @@ const controlBranches = async () => {
 
     await state.search.getResults();
 	renderSelectOptions(state.search.teachers);
-	renderMultilist(state.search.branches);
+	//renderMultilist(state.search.branches);
 	renderOptions(state.search.teachers);
     renderResults(state.search.result);
     //console.log(state.search.result);
@@ -184,6 +185,7 @@ const postLesson = async () => {
 
 const clearInputs=()=>{
 	$('#filiere').val('');
+	$('#intitule').val('');
 	//$('#coordonnateur').val('');
 }
 const closeModal=()=>{

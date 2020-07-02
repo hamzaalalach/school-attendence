@@ -182,6 +182,36 @@ router.delete('/lessons/:id', (req, res) => {
 	});
 });
 
+router.post('/lessons/:lessonId/branches', (req, res) => {
+	lessonsAPI.addBranch(req.params.lessonId, req.body, (err, lesson) => {
+		if (err && err.status === 404) {
+			abort.notFound(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
+		} else {
+			res.status(200).json({
+				success: true,
+				lesson
+			});
+		}
+	});
+});
+
+router.delete('/lessons/:lessonId/branches/:branchId', (req, res) => {
+	lessonsAPI.removeBranch(req.params.lessonId, req.params.branchId, (err, lesson) => {
+		if (err && err.status === 404) {
+			abort.notFound(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
+		} else {
+			res.status(200).json({
+				success: true,
+				lesson
+			});
+		}
+	});
+});
+
 router.get('/sessions', (req, res) => {
 	sessionsAPI.getSessions((err, sessions) => {
 		if (err) {

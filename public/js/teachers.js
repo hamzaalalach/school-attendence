@@ -111,9 +111,10 @@ class Teachers {
 		try {
 			const res = await axios.get(`http://localhost:5000/api/teachers`);
 			const l = await axios.get(`http://localhost:5000/api/lessons`);
+			
 			this.result = res.data.teachers;
 			this.lessons=l.data.lessons;
-			console.log(this.lessons);
+	
 
 		} catch (err) {
 			alert(err)
@@ -255,7 +256,7 @@ document.querySelector('tbody').addEventListener('click', (e) => {
 	var I = e.target.parentNode.parentNode.parentNode.parentNode.parentNode.id;
 	document.querySelector('.displayLessons').innerHTML='';
 	renderLessons(state.search.lessons,I);
-	//console.log(state.IDd);
+	console.log(I);
 	if (id) {
 		state.Id=id;
 		

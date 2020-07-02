@@ -6,11 +6,11 @@ const express = require('express'),
 router.get('/login', (req, res) => {
 	// usersAPI.createUser(
 	// 	{
-	// 		firstName: 'branchManager',
-	// 		lastName: 'branchManager',
-	// 		email: 'branchManager@gmail.com',
+	// 		firstName: 'teacher',
+	// 		lastName: 'teacher',
+	// 		email: 'teacher@gmail.com',
 	// 		password: '43898561',
-	// 		mode: 'branchManager'
+	// 		mode: 'teacher'
 	// 	},
 	// 	(err, user) => {
 	// 		if (err) {
@@ -24,7 +24,7 @@ router.get('/login', (req, res) => {
 
 router.post('/login', (req, res, next) => {
 	const mode = req.body.mode;
-	if (mode != 'chairman' && mode != 'businessManager' && mode != 'branchManager') {
+	if (mode != 'chairman' && mode != 'businessManager' && mode != 'branchManager' && mode != 'teacher') {
 		res.status(400).end();
 	}
 

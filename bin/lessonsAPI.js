@@ -1,5 +1,6 @@
 const Lesson = require('../models/Lesson');
 const Teacher = require('../models/Teacher');
+const Branch = require('../models/Branch');
 
 exports.getLessons = cb => {
 	Lesson.find({}, (err, lessons) => {
@@ -20,7 +21,7 @@ exports.createLesson = (data, cb) => {
 				if (err) {
 					cb({ status: 500, message: err });
 				} else {
-					Teacher.updateOne(
+					Teacher.findOneAndUpdate(
 						{ _id: lesson.teacher },
 						{
 							$push: {
@@ -57,7 +58,7 @@ exports.deleteLesson = (id, cb) => {
 		if (err) {
 			cb({ status: 404 });
 		} else {
-			Teacher.updateOne(
+			Teacher.findOneAndUpdate(
 				{ _id: lesson.teacher },
 				{
 					$pull: {
@@ -66,6 +67,74 @@ exports.deleteLesson = (id, cb) => {
 				},
 				err => {
 					err ? cb({ status: 500, message: err }) : cb(null, lesson);
+				}
+			);
+		}
+	});
+};
+
+exports.addBranch = (id, data, cb) => {
+	Lesson.findById(id, (err, lesson) => {
+		if (err) {
+			cb({ status: 404 });
+		} else {
+			Branch.findOneAndUpdate(
+				{ _id: data.id },
+				{
+					$push: {
+						lessons: new String(id)
+					}
+				},
+				err => {
+					if (err) {
+						cb({ status: 500, message: err });
+					} else {
+						Lesson.findOneAndUpdate(
+							{ _id: id },
+							{
+								$push: {
+									branches: new String(id)
+								}
+							},
+							(err, newLesson) => {
+								err ? cb({ status: 500, message: err }) : console.log(newLesson);
+							}
+						);
+					}
+				}
+			);
+		}
+	});
+};
+
+exports.removeBranch = (lessonId, branchId, cb) => {
+	Lesson.findById(lessonId, (err, lesson) => {
+		if (err) {
+			cb({ status: 404 });
+		} else {
+			Branch.findOneAndUpdate(
+				{ _id: branchId },
+				{
+					$pull: {
+						lessons: new String(lessonId)
+					}
+				},
+				err => {
+					if (err) {
+						cb({ status: 500, message: err });
+					} else {
+						Lesson.findOneAndUpdate(
+							{ _id: branchId },
+							{
+								$pull: {
+									branches: new String(branchId)
+								}
+							},
+							(err, newLesson) => {
+								err ? cb({ status: 500, message: err }) : cb(null, newLesson);
+							}
+						);
+					}
 				}
 			);
 		}

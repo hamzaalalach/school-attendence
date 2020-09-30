@@ -53,7 +53,7 @@ router.patch('/teachers/:id', (req, res) => {
 
 router.delete('/teachers/:id', (req, res) => {
 	teachersAPI.deleteTeacher(req.params.id, (err, teacher) => {
-		if (err) {
+		if (err && err.status === 404) {
 			abort.notFound(res);
 		} else {
 			res.status(200).json({
@@ -93,6 +93,36 @@ router.post('/branches', (req, res) => {
 	});
 });
 
+router.post('/branches/:branchId/lessons', (req, res) => {
+	branchesAPI.addLesson(req.params.branchId, req.body, (err, branch) => {
+		if (err && err.status === 404) {
+			abort.notFound(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
+		} else {
+			res.status(200).json({
+				success: true,
+				branch
+			});
+		}
+	});
+});
+
+router.delete('/branches/:branchId/lessons/:lessonId', (req, res) => {
+	branchesAPI.removeLesson(req.params.branchId, req.params.lessonId, (err, branch) => {
+		if (err && err.status === 404) {
+			abort.notFound(res);
+		} else if (err && err.status === 500) {
+			abort.internalServer(res, err.message);
+		} else {
+			res.status(200).json({
+				success: true,
+				branch
+			});
+		}
+	});
+});
+
 router.patch('/branches/:id', (req, res) => {
 	branchesAPI.updateBranch(req.params.id, req.body, (err, branch) => {
 		if (err && err.status === 404) {
@@ -110,7 +140,7 @@ router.patch('/branches/:id', (req, res) => {
 
 router.delete('/branches/:id', (req, res) => {
 	branchesAPI.deleteBranch(req.params.id, (err, branch) => {
-		if (err) {
+		if (err && err.status === 404) {
 			abort.notFound(res);
 		} else {
 			res.status(200).json({
@@ -382,7 +412,7 @@ router.patch('/presences/:id', (req, res) => {
 
 router.delete('/presences/:id', (req, res) => {
 	presencesAPI.deletePresence(req.params.id, (err, presence) => {
-		if (err) {
+		if (err && err.status === 404) {
 			abort.notFound(res);
 		} else {
 			res.status(200).json({

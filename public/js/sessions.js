@@ -146,7 +146,7 @@ document.querySelector('.pagination').addEventListener('click', e => {
 	}
 });
 
-//-------------------ADD TEACHER-----------------//
+//-------------------ADD SESSION-----------------//
 
 const postStudent = async () => {
     const Lecon = $("#lecon").val();

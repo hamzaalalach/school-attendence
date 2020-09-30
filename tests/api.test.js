@@ -4,7 +4,6 @@ const db = require('../bin/db');
 const Teacher = require('../models/Teacher');
 const Branch = require('../models/Branch');
 const Lesson = require('../models/Lesson');
-const { expectCt } = require('helmet');
 let client;
 
 beforeAll(async () => {
@@ -25,8 +24,8 @@ describe('Teachers endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('teacher');
 		expect(data.teacher.nom).toBe('nomTest');
 		expect(data.teacher.prenom).toBe('prenomTest');
@@ -43,8 +42,8 @@ describe('Teachers endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(422);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(422);
+		expect(data.success).toBeFalsy();
 		expect(data.error).toBe(422);
 		expect(data.message).toBe('unprocessable');
 		done();
@@ -56,8 +55,8 @@ describe('Teachers endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data.teacher.nom).toBe('nomTestNew');
 		done();
 	});
@@ -68,8 +67,8 @@ describe('Teachers endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(404);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -79,8 +78,8 @@ describe('Teachers endpoints', () => {
 		const res = await client.get('/api/teachers');
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data.totalTeachers).toBe(3);
 		expect(data).toHaveProperty('teachers');
 		done();
@@ -90,8 +89,8 @@ describe('Teachers endpoints', () => {
 		const res = await client.delete('/api/teachers/' + id);
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data.teacher._id).toBe(id);
 		done();
 	});
@@ -100,8 +99,8 @@ describe('Teachers endpoints', () => {
 		const res = await client.delete('/api/teachers/1');
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(404);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -118,8 +117,8 @@ describe('Branches endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('branch');
 		expect(data.branch.label).toBe('Data Science');
 		expect(data.branch.coordonnateur).toBe('Someone');
@@ -132,11 +131,41 @@ describe('Branches endpoints', () => {
 		const res = await client.post('/api/branches').send({});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(422);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(422);
+		expect(data.success).toBeFalsy();
 		expect(data.error).toBe(422);
 		expect(data.message).toBe('unprocessable');
 		done();
+	});
+
+	it('Should return 200 on post lesson to branch', async done => {
+		const res = await client.post(`/api/branches/${id}/lessons`).send({
+			id: '5eea9d099924bc1ac34ca553'
+		});
+		const data = res.body;
+
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
+		expect(data).toHaveProperty('branch');
+		expect(data.branch.lessons).toContain('5eea9d099924bc1ac34ca553');
+		Lesson.findById('5eea9d099924bc1ac34ca553', (err, lesson) => {
+			expect(lesson.branches).toContain(id);
+			done();
+		});
+	});
+
+	it('Should return 200 on delete lesson from branch', async done => {
+		const res = await client.delete(`/api/branches/${id}/lessons/5eea9d099924bc1ac34ca553`);
+		const data = res.body;
+
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
+		expect(data).toHaveProperty('branch');
+		expect(data.branch.lessons).not.toContain('5eea9d099924bc1ac34ca553');
+		Lesson.findById('5eea9d099924bc1ac34ca553', (err, lesson) => {
+			expect(lesson.branches).not.toContain(id);
+			done();
+		});
 	});
 
 	it('Should return 200 on patch branches', async done => {
@@ -145,8 +174,8 @@ describe('Branches endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data.branch.label).toBe('Data Litterature');
 		done();
 	});
@@ -157,8 +186,8 @@ describe('Branches endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(404);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -168,8 +197,8 @@ describe('Branches endpoints', () => {
 		const res = await client.get('/api/branches');
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('branches');
 		expect(data.totalBranches).toBe(2);
 		done();
@@ -179,8 +208,8 @@ describe('Branches endpoints', () => {
 		const res = await client.delete('/api/branches/' + id);
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data.branch._id).toBe(id);
 		done();
 	});
@@ -189,8 +218,8 @@ describe('Branches endpoints', () => {
 		const res = await client.delete('/api/branches/1');
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(404);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -207,8 +236,8 @@ describe('Lessons endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('lesson');
 		expect(data.lesson.intitule).toBe('Cours 1');
 		id = data.lesson._id;
@@ -222,8 +251,8 @@ describe('Lessons endpoints', () => {
 		const res = await client.post('/api/lessons').send({});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(422);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(422);
+		expect(data.success).toBeFalsy();
 		expect(data.error).toBe(422);
 		expect(data.message).toBe('unprocessable');
 		done();
@@ -236,8 +265,8 @@ describe('Lessons endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(409);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(409);
+		expect(data.success).toBeFalsy();
 		expect(data.error).toBe(409);
 		expect(data.message).toBe('Conflict');
 		done();
@@ -249,8 +278,8 @@ describe('Lessons endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('lesson');
 		expect(data.lesson.branches).toContain('5efa8273b609b86631715ab5');
 		Branch.findById('5efa8273b609b86631715ab5', (err, branch) => {
@@ -263,8 +292,8 @@ describe('Lessons endpoints', () => {
 		const res = await client.delete('/api/lessons/' + id + '/branches/5efa8273b609b86631715ab5');
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('lesson');
 		expect(data.lesson.branches).not.toContain('5efa8273b609b86631715ab5');
 		Branch.findById('5efa8273b609b86631715ab5', (err, branch) => {
@@ -279,8 +308,8 @@ describe('Lessons endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data.lesson.intitule).toBe('Cours 2');
 		expect(data.lesson._id).toBe(id);
 		done();
@@ -292,8 +321,8 @@ describe('Lessons endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(404);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -303,8 +332,8 @@ describe('Lessons endpoints', () => {
 		const res = await client.get('/api/lessons');
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('lessons');
 		expect(data.totalLessons).toBe(2);
 		done();
@@ -314,8 +343,8 @@ describe('Lessons endpoints', () => {
 		const res = await client.delete('/api/lessons/' + id);
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('lesson');
 		expect(data.lesson._id).toBe(id);
 		Teacher.findById(data.lesson.teacher, (err, teacher) => {
@@ -328,8 +357,8 @@ describe('Lessons endpoints', () => {
 		const res = await client.delete('/api/lessons/1');
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(404);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -348,8 +377,8 @@ describe('Sessions endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('session');
 		expect(data.session.salle).toBe('Salle 1');
 		expect(data.session.heure).toBe('8-10');
@@ -366,8 +395,8 @@ describe('Sessions endpoints', () => {
 		const res = await client.post('/api/sessions').send({});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(422);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(422);
+		expect(data.success).toBeFalsy();
 		expect(data.error).toBe(422);
 		expect(data.message).toBe('unprocessable');
 		done();
@@ -379,8 +408,8 @@ describe('Sessions endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('session');
 		expect(data.session.salle).toBe('Salle 2');
 		expect(data.session.heure).toBe('8-10');
@@ -393,8 +422,8 @@ describe('Sessions endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(404);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -404,8 +433,8 @@ describe('Sessions endpoints', () => {
 		const res = await client.get('/api/sessions');
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('sessions');
 		expect(data.totalSessions).toBe(2);
 		done();
@@ -415,8 +444,8 @@ describe('Sessions endpoints', () => {
 		const res = await client.delete('/api/sessions/' + id);
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('session');
 		expect(data.session._id).toBe(id);
 		Lesson.findById(data.session.lesson, (err, lesson) => {
@@ -429,8 +458,8 @@ describe('Sessions endpoints', () => {
 		const res = await client.delete('/api/sessions/1');
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(404);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -449,8 +478,8 @@ describe('Students endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('student');
 		expect(data.student.branch).toBe('5efa8273b609b86631715ab5');
 		expect(data.student.matricule).toBe('032898A');
@@ -467,8 +496,8 @@ describe('Students endpoints', () => {
 		const res = await client.post('/api/students').send({});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(422);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(422);
+		expect(data.success).toBeFalsy();
 		expect(data.error).toBe(422);
 		expect(data.message).toBe('unprocessable');
 		done();
@@ -483,8 +512,8 @@ describe('Students endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(409);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(409);
+		expect(data.success).toBeFalsy();
 		expect(data.error).toBe(409);
 		expect(data.message).toBe('Conflict');
 		done();
@@ -497,8 +526,8 @@ describe('Students endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('student');
 		expect(data.student.matricule).toBe('032898B');
 		expect(data.student.nom).toBe('Alalach mod');
@@ -512,8 +541,8 @@ describe('Students endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(404);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -523,8 +552,8 @@ describe('Students endpoints', () => {
 		const res = await client.get('/api/students');
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('students');
 		expect(data.totalStudents).toBe(2);
 		done();
@@ -534,8 +563,8 @@ describe('Students endpoints', () => {
 		const res = await client.delete('/api/students/' + id);
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('student');
 		expect(data.student._id).toBe(id);
 		Branch.findById(data.student.branch, (err, branch) => {
@@ -548,8 +577,8 @@ describe('Students endpoints', () => {
 		const res = await client.delete('/api/students/1');
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(404);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -567,12 +596,12 @@ describe('Presence Endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('presence');
 		expect(data.presence.studentId).toBe('5ef76589b22d4c4854f3e6aa');
 		expect(data.presence.sessionId).toBe('5ef76610b22d4c4854f3e6ab');
-		expect(data.presence.present).toBe(false);
+		expect(data.presence.present).toBeFalsy();
 		id = data.presence._id;
 		done();
 	});
@@ -585,8 +614,8 @@ describe('Presence Endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(409);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(409);
+		expect(data.success).toBeFalsy();
 		expect(data.error).toBe(409);
 		expect(data.message).toBe('Conflict');
 		done();
@@ -599,8 +628,8 @@ describe('Presence Endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(422);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(422);
+		expect(data.success).toBeFalsy();
 		expect(data.error).toBe(422);
 		expect(data.message).toBe('unprocessable');
 		done();
@@ -612,10 +641,10 @@ describe('Presence Endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(200);
-		expect(data.success).toBe(true);
+		expect(res.statusCode).toBe(200);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('presence');
-		expect(data.presence.present).toBe(true);
+		expect(data.presence.present).toBeTruthy();
 		expect(data.presence._id).toBe(id);
 		done();
 	});
@@ -626,8 +655,8 @@ describe('Presence Endpoints', () => {
 		});
 		const data = res.body;
 
-		expect(res.statusCode).toEqual(404);
-		expect(data.success).toBe(false);
+		expect(res.statusCode).toBe(404);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -638,7 +667,7 @@ describe('Presence Endpoints', () => {
 		const data = res.body;
 
 		expect(res.statusCode).toBe(200);
-		expect(data.success).toBe(true);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('presences');
 		expect(data.totalPresences).toBe(1);
 		done();
@@ -649,7 +678,7 @@ describe('Presence Endpoints', () => {
 		const data = res.body;
 
 		expect(res.statusCode).toBe(404);
-		expect(data.success).toBe(false);
+		expect(data.success).toBeFalsy();
 		expect(data.message).toBe('Not Found');
 		expect(data.error).toBe(404);
 		done();
@@ -660,7 +689,7 @@ describe('Presence Endpoints', () => {
 		const data = res.body;
 
 		expect(res.statusCode).toBe(200);
-		expect(data.success).toBe(true);
+		expect(data.success).toBeTruthy();
 		expect(data).toHaveProperty('presence');
 		expect(data.presence._id).toBe(id);
 		done();

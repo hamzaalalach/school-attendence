@@ -33,7 +33,7 @@ exports.createSession = (data, cb) => {
 
 exports.updateSession = (id, data, cb) => {
 	Session.findById(id, (err, session) => {
-		if (err) {
+		if (err || !session) {
 			cb({ status: 404 });
 		} else {
 			for (let i in data) {
@@ -48,7 +48,7 @@ exports.updateSession = (id, data, cb) => {
 
 exports.deleteSession = (id, cb) => {
 	Session.findOneAndRemove({ _id: id }, (err, session) => {
-		if (err) {
+		if (err || !session) {
 			cb({ status: 404 });
 		} else {
 			Lesson.updateOne(

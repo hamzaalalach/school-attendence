@@ -1,236 +1,170 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <title>Gestion des absences</title>
-    <meta charset="utf-8" />
-    <meta
-      name="viewport"
-      content="width=device-width, initial-scale=1, shrink-to-fit=no"
-    />
-   
-    <link
-      href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900"
-      rel="stylesheet"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round"
-    />
-    <link
-      rel="stylesheet"
-      href="https://fonts.googleapis.com/icon?family=Material+Icons"
-    />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link
-      rel="stylesheet"
-      href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
-    />
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<head>
+  <title>Gestion des absences</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+
+  <link href="https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700,800,900" rel="stylesheet" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto|Varela+Round" />
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+  <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.1.0.min.js"></script>-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-    
-    
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
-    <link
-      rel="stylesheet"
-      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
-    />
-    <link rel="stylesheet" href="../css/style.css" />
-  </head>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-  <body>
-    <div class="wrapper d-flex align-items-stretch">
-      <nav id="sidebar">
-        <div class="custom-menu">
-          <button type="button" id="sidebarCollapse" class="btn btn-primary">
-            <i class="fa fa-bars"></i>
-            <span class="sr-only">Toggle Menu</span>
-          </button>
-        </div>
-        <div class="p-4">
-          <h1>
-            <a  class="logo"
-              >Gestion des <span>Absences</span></a
-            >
-          </h1>
-          <ul class="list-unstyled components mb-5">
-            
-            <li>
-              <a href="/dashboard/list"
-                ><span class="fa fa-cogs mr-3"></span>Créer une liste</a
-              >
-            </li>
-            <li  class="active">
-              <a href="/dashboard/presence"
-                ><span class="fa fa-cogs mr-3"></span>Liste de présence</a>
-            </li>
-            <li>
-              <a class="logout_btn" href="#"
-                ><span class="fa fa-sign-out mr-3"></span> Se déconnecter</a
-              >
-            </li>
-          </ul>
-        </div>
-      </nav>
 
-      <!-- Page Content  -->
-      <div id="content" class="p-4 p-md-5 pt-5">
-        <div class="container">
-          <div class="table-wrapper">
-            <div class="table-title">
-              <div class="row">
-                <div class="col-sm-6">
-                  <h2 style="text-align: right;">Liste de <b>Présence</b></h2>
-                  <br>
-                  <br>
-                  
-                </div>
-                <div class="col-sm-6">
-                  <a id="addd"
-                    href="#addEmployeeModal"
-                    class="btn btn-success"
-                    data-toggle="modal"
-                    ><i class="material-icons">&#xE147;</i>
-                    <span>Afficher liste</span></a
-                  >
-                  
-                </div>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="../css/style.css" />
+</head>
+
+<body>
+  <div class="wrapper d-flex align-items-stretch">
+    <nav id="sidebar">
+      <div class="custom-menu">
+        <button type="button" id="sidebarCollapse" class="btn btn-primary">
+          <i class="fa fa-bars"></i>
+          <span class="sr-only">Toggle Menu</span>
+        </button>
+      </div>
+      <div class="p-4">
+        <h1>
+          <a class="logo">Gestion des <span>Absences</span></a>
+        </h1>
+        <ul class="list-unstyled components mb-5">
+
+          <li>
+            <a href="/dashboard/presences-list"><span class="fa fa-cogs mr-3"></span>Créer une liste</a>
+          </li>
+          <li class="active">
+            <a href="/dashboard/presences"><span class="fa fa-cogs mr-3"></span>Liste de présence</a>
+          </li>
+          <li>
+            <a class="logout_btn" href="#"><span class="fa fa-sign-out mr-3"></span> Se déconnecter</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Page Content  -->
+    <div id="content" class="p-4 p-md-5 pt-5">
+      <div class="container">
+        <div class="table-wrapper">
+          <div class="table-title">
+            <div class="row">
+              <div class="col-sm-6"></div>
+              <div class="col-sm-6">
+                <a id="addd" href="#addEmployeeModal" class="btn btn-success" data-toggle="modal"><i
+                    class="material-icons">&#xE147;</i>
+                  <span>Afficher liste</span></a>
+
               </div>
             </div>
-            <div class="coordonner" ></div>
-            <table class="table table-striped table-hover">
-              <thead>
-                
-              </thead>
-              <tbody>
-                
-              </tbody>
-            </table>
-            <div class="clearfix">
-              <!--<div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>-->
-              <ul class="pagination">
-                
-              </ul>
-            </div>
+          </div>
+          <div class="coordonner"></div>
+          <div class="row charts">
+            
+          </div>
+          <div class="title" style="text-align: center; display: none ; margin-top:70px;">
+            <h2 style="font-size: 30px;">Liste de <b>Présence</b></h2>
+            
+
+          </div>
+          <table class="table table-striped table-hover">
+            <thead>
+
+            </thead>
+            <tbody>
+
+            </tbody>
+          </table>
+          <div class="clearfix">
+            <!--<div class="hint-text">Showing <b>5</b> out of <b>25</b> entries</div>-->
+            <ul class="pagination">
+
+            </ul>
           </div>
         </div>
-        <!-- Add Modal HTML -->
-        <div id="addEmployeeModal" class="modal fade">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <form id="addForm">
-                <div class="modal-header">
-                  <h4 class="modal-title">Afficher Liste</h4>
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-hidden="true"
-                  >
-                    &times;
-                  </button>
+      </div>
+      <!-- Add Modal HTML -->
+      <div id="addEmployeeModal" class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form id="addForm">
+              <div class="modal-header">
+                <h4 class="modal-title">Afficher Liste</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                  &times;
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label>Filière</label>
+                  <select id="filiere" class="form-control" required>
+                    <option value="" disabled selected>Filière</option>
+                  </select>
                 </div>
-                <div class="modal-body">
-                  <div class="form-group">
-                    <label>Filière</label>
-                    <select id="filiere" class="form-control" required>
-                        <option value="" disabled selected>Filière</option>
-                    </select>
-                  </div>
-                  <div class="form-group">
-                    <label>Cours</label>
-                    <select id="cours" class="form-control" required>
-                        <option value="" disabled selected>Cours</option>
-                    </select>
-                  </div>
-                  <!--<div class="form-group">
+                <div class="form-group">
+                  <label>Cours</label>
+                  <select id="cours" class="form-control" required>
+                    <option value="" disabled selected>Cours</option>
+                  </select>
+                </div>
+                <!--<div class="form-group">
                     <label>Séance</label>
                     <select id="session" class="form-control">
                         <option disabled selected>Séance</option>
                     </select>
                   </div>-->
-                  
-                </div>
-                <div class="modal-footer">
-                  <input
-                    type="button"
-                    class="btn btn-default"
-                    data-dismiss="modal"
-                    value="Annuler"
-                  />
-                  <input
-                    type="submit"
-                    class="btn btn-success"
-                    value="Afficher"
-                  />
-                </div>
-              </form>
-            </div>
+
+              </div>
+              <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Annuler" />
+                <input type="submit" class="btn btn-success" value="Afficher" />
+              </div>
+            </form>
           </div>
         </div>
-        <!-- Edit Modal HTML -->
-        <div id="editEmployeeModal" class="modal fade">
-          <div class="modal-dialog">
-            <div class="modal-content">
-              <form id="editForm">
-                <div class="modal-header">
-                  <h4 class="modal-title">Modifier Filière</h4>
-                  <button
-                    type="button"
-                    class="close"
-                    data-dismiss="modal"
-                    aria-hidden="true"
-                  >
-                    &times;
-                  </button>
+      </div>
+      <!-- Edit Modal HTML -->
+      <div id="editEmployeeModal" class="modal fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <form id="editForm">
+              <div class="modal-header">
+                <h4 class="modal-title">Modifier Filière</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                  &times;
+                </button>
+              </div>
+              <div class="modal-body">
+                <div class="form-group">
+                  <label>Filière</label>
+                  <input type="text" name="filiere" class="form-control" required />
                 </div>
-                <div class="modal-body">
-                  <div class="form-group">
-                    <label>Filière</label>
-                    <input
-                      type="text"
-                      name="filiere"
-                      class="form-control"
-                      required
-                    />
-                  </div>
-                  <div class="form-group">
-                    <label>session</label>
-                    <input
-                      type="text"
-                      name="session"
-                      class="form-control"
-                      required
-                    />
-                  </div>
-                  
+                <div class="form-group">
+                  <label>session</label>
+                  <input type="text" name="session" class="form-control" required />
                 </div>
-                <div class="modal-footer">
-                  <input
-                    type="button"
-                    class="btn btn-default"
-                    data-dismiss="modal"
-                    value="Annuler"
-                  />
-                  <input
-                    type="submit"
-                    class="btn btn-info"
-                    value="sauvegarder"
-                  />
-                </div>
-              </form>
-            </div>
+
+              </div>
+              <div class="modal-footer">
+                <input type="button" class="btn btn-default" data-dismiss="modal" value="Annuler" />
+                <input type="submit" class="btn btn-info" value="sauvegarder" />
+              </div>
+            </form>
           </div>
         </div>
-        <!-- Delete Modal HTML 
+      </div>
+      <!-- Delete Modal HTML 
         <div id="deleteEmployeeModal" class="modal fade">
           <div class="modal-dialog">
             <div class="modal-content">
@@ -271,16 +205,18 @@
         </div>
       </div>
     </div>-->
-    <script>
-      
-    </script>
-    <script src="../js/jquery.min.js"></script>
-    <script src="../js/popper.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/main.js"></script>
-    <script src="../js/prsdashboard.js"></script>
-    <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+      <script>
+
+      </script>
+      <script src="../js/jquery.min.js"></script>
+      <script src="../js/popper.js"></script>
+      <script src="../js/bootstrap.min.js"></script>
+      <script src="../js/main.js"></script>
+      <script src="../js/prsdashboard.js"></script>
+      <!--<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>-->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
-  </body>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.7.3/Chart.js"></script>
+      <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+</body>
+
 </html>

@@ -40,7 +40,7 @@ exports.createLesson = (data, cb) => {
 
 exports.updateLesson = (id, data, cb) => {
 	Lesson.findById(id, (err, lesson) => {
-		if (err) {
+		if (err || !lesson) {
 			cb({ status: 404 });
 		} else {
 			for (let i in data) {
@@ -55,7 +55,7 @@ exports.updateLesson = (id, data, cb) => {
 
 exports.deleteLesson = (id, cb) => {
 	Lesson.findOneAndRemove({ _id: id }, (err, lesson) => {
-		if (err) {
+		if (err || !lesson) {
 			cb({ status: 404 });
 		} else {
 			Teacher.findOneAndUpdate(
@@ -74,7 +74,7 @@ exports.deleteLesson = (id, cb) => {
 };
 
 exports.addBranch = (id, data, cb) => {
-	Lesson.findById(id, (err, lesson) => {
+	Lesson.findById(id, err => {
 		if (err) {
 			cb({ status: 404 });
 		} else {
@@ -89,15 +89,16 @@ exports.addBranch = (id, data, cb) => {
 					if (err) {
 						cb({ status: 500, message: err });
 					} else {
-						Lesson.findOneAndUpdate(
-							{ _id: id },
+						Lesson.findByIdAndUpdate(
+							id,
 							{
 								$push: {
-									branches: new String(id)
+									branches: new String(data.id)
 								}
 							},
+							{ new: true },
 							(err, newLesson) => {
-								err ? cb({ status: 500, message: err }) : console.log(newLesson);
+								err ? cb({ status: 500, message: err }) : cb(null, newLesson);
 							}
 						);
 					}
@@ -108,12 +109,12 @@ exports.addBranch = (id, data, cb) => {
 };
 
 exports.removeBranch = (lessonId, branchId, cb) => {
-	Lesson.findById(lessonId, (err, lesson) => {
+	Lesson.findById(lessonId, err => {
 		if (err) {
 			cb({ status: 404 });
 		} else {
-			Branch.findOneAndUpdate(
-				{ _id: branchId },
+			Branch.findByIdAndUpdate(
+				branchId,
 				{
 					$pull: {
 						lessons: new String(lessonId)
@@ -123,13 +124,14 @@ exports.removeBranch = (lessonId, branchId, cb) => {
 					if (err) {
 						cb({ status: 500, message: err });
 					} else {
-						Lesson.findOneAndUpdate(
-							{ _id: branchId },
+						Lesson.findByIdAndUpdate(
+							lessonId,
 							{
 								$pull: {
 									branches: new String(branchId)
 								}
 							},
+							{ new: true },
 							(err, newLesson) => {
 								err ? cb({ status: 500, message: err }) : cb(null, newLesson);
 							}

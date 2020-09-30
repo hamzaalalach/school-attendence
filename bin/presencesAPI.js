@@ -33,7 +33,7 @@ exports.createPresence = (data, cb) => {
 
 exports.updatePresence = (id, data, cb) => {
 	Presence.findById(id, (err, presence) => {
-		if (err) {
+		if (err || !presence) {
 			cb({ status: 404 });
 		} else {
 			for (let i in data) {
@@ -48,6 +48,10 @@ exports.updatePresence = (id, data, cb) => {
 
 exports.deletePresence = (id, cb) => {
 	Presence.findOneAndRemove({ _id: id }, (err, presence) => {
-		err ? cb(err) : cb(null, presence);
+		if (err || !presence) {
+			cb({ status: 404 });
+		} else {
+			cb(null, presence);
+		}
 	});
 };

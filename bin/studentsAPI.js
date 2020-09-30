@@ -39,7 +39,7 @@ exports.createStudent = (data, cb) => {
 
 exports.updateStudent = (id, data, cb) => {
 	Student.findById(id, (err, student) => {
-		if (err) {
+		if (err || !student) {
 			cb({ status: 404 });
 		} else {
 			for (let i in data) {
@@ -54,7 +54,7 @@ exports.updateStudent = (id, data, cb) => {
 
 exports.deleteStudent = (id, cb) => {
 	Student.findOneAndRemove({ _id: id }, (err, student) => {
-		if (err) {
+		if (err || !student) {
 			cb({ status: 404 });
 		} else {
 			Branch.updateOne(

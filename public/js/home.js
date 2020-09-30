@@ -54,6 +54,9 @@ $('#loginForm').submit(function(event) {
 				else if($('#sel').val()=='branchManager'){
 					setTimeout(() => (window.location = 'http://localhost:5000/dashboard/lessons'), 1200);
 				}
+				else if($('#sel').val()=='teacher'){
+					setTimeout(() => (window.location = 'http://localhost:5000/dashboard/presences-list'), 1200);
+				}
 			}
 		},
 		error: function(xhr, ajaxOptions, thrownError) {

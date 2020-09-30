@@ -18,7 +18,7 @@ exports.createTeacher = (data, cb) => {
 
 exports.updateTeacher = (id, data, cb) => {
 	Teacher.findById(id, (err, teacher) => {
-		if (err) {
+		if (err || !teacher) {
 			cb({ message: err, status: 404 });
 		} else {
 			for (let i in data) {
@@ -33,6 +33,10 @@ exports.updateTeacher = (id, data, cb) => {
 
 exports.deleteTeacher = (id, cb) => {
 	Teacher.findOneAndRemove({ _id: id }, (err, teacher) => {
-		err ? cb(err) : cb(null, teacher);
+		if (err || !teacher) {
+			cb({ status: 404 });
+		} else {
+			cb(null, teacher);
+		}
 	});
 };

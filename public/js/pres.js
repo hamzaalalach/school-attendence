@@ -110,7 +110,7 @@ const postPresence = async (e, etat) => {
         //return gl.data.presence;
 
     } catch (err) {
-        console.log(err)
+        //console.log(err)
     }
 };
 const closeModal=()=>{
@@ -122,7 +122,7 @@ const closeModal=()=>{
 	$('body').removeClass('modal-open');
 	$('body').attr('style','');
 }
-$("#addForm").submit(function (event) {
+$("#addForm").submit(async (event)=> {
     event.preventDefault();
     document.querySelector('.coordonner').innerHTML='';
     document.querySelector('thead').innerHTML='';
@@ -131,7 +131,9 @@ $("#addForm").submit(function (event) {
 
     var id = $('#filiere').val();
     postPresneces(state.search.students, id);
-    controlPresences();
+    const b=await controlPresences();
+    //renderStudents(b);
+    console.log(b);
     closeModal();
     
     
@@ -164,13 +166,16 @@ const controlPresences = async () => {
     state1.search = new Presence($('#session').val());
 
     await state1.search.getResults();
-    //findStudent(state1.search.presences,)
-    /*var id = $('#filiere').val();
-    postPresneces(state.search.students, id);*/
-    renderStudents(state1.search.presences);
-    //console.log(state1.search.presences);
+   
+    //renderStudents(state1.search.presences);
+    return state1.search.presences;
+    
 
-
+}
+const check=(e)=>{
+    if(e.present){
+        return 'checked'
+    }else ''
 }
 const renderStudent = (m, n, e) => {
     const html2 = `<tr id="${e._id}">
@@ -184,6 +189,7 @@ const renderStudent = (m, n, e) => {
           id="${e._id}"
           name="options[]"
           value="1"
+          ${check(e)}
         />
         <label for="${e._id}"></label>
 	  </span>

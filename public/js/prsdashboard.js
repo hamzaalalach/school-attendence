@@ -1,3 +1,4 @@
+//var Chart = require('chart.js');
 class Option {
     constructor() {}
     async getResults() {
@@ -124,21 +125,39 @@ const renderHead = () => {
 
 	<br>
 	<br>`;
-    const html = `<tr>
+    const html = `
+    <br>
+	<br>
+    <tr>
 	<th> </th>
 	<th >Matricule</th>
 	<th >Nom et prénom</th>
 	<th style="text-align: center;">Total Absences</th>
+    </tr>`
+    const ht = `
+    <div class="col-md-12">
+    <div class="chart_title">Absences par Cours</div>
+    <div class="chart_container">
+      <canvas id="myChart"></canvas>
+    </div>
+    </div>
+    
+    
+    
 	
-	
-  </tr>`
+
+  `;
     document.querySelector('.coordonner').insertAdjacentHTML("beforeend", html1);
+    //document.querySelector('.charts').insertAdjacentHTML("beforeend", ht);
     document.querySelector('thead').insertAdjacentHTML("beforeend", html);
+    //barChart();
 }
 const renderStudents = (presences) => {
     presences.forEach(element => findStudent(state.search.students, element));
 }
+const t = [];
 const findStudent = (students, e) => {
+
 
     students.forEach(element => {
 
@@ -146,6 +165,12 @@ const findStudent = (students, e) => {
             const a = element.nom + ' ' + element.prenom;
             //a=element.nom+' '+element.prenom;
             //a=element.matricule;
+            i = e.i;
+            t.push({
+                a,
+                i
+            })
+
             renderStudent(element.matricule, a, e);
 
         }
@@ -172,39 +197,47 @@ const renderStudent = (e) => {
 const renderStudents=(e)=>{
     e.forEach(el=>renderStudent(el));
 }*/
-const closeModal=()=>{
-	$('.modal').removeClass('in');
-	$('.modal').removeClass('show');
-	$('.modal').attr('aria-hidden','true');
-	$('.modal').css('display','none');
-	$('.modal-backdrop').remove();
-	$('body').removeClass('modal-open');
-	$('body').attr('style','');
+const closeModal = () => {
+    $('.modal').removeClass('in');
+    $('.modal').removeClass('show');
+    $('.modal').attr('aria-hidden', 'true');
+    $('.modal').css('display', 'none');
+    $('.modal-backdrop').remove();
+    $('body').removeClass('modal-open');
+    $('body').attr('style', '');
 }
 const stt = {};
 $("#addForm").submit(async (event) => {
     event.preventDefault();
     //console.log(state.sess);
-    document.querySelector('.coordonner').innerHTML='';
-    document.querySelector('thead').innerHTML='';
-    document.querySelector('tbody').innerHTML='';
-    stt.m = await fetchData();
+    document.querySelector('.coordonner').innerHTML = '';
+    document.querySelector('thead').innerHTML = '';
+    document.querySelector('tbody').innerHTML = '';
+    //document.getElementById('myChart').innerHTML = '';
+    document.querySelector('.charts').innerHTML = '';
+    document.querySelector('.title').style.display = 'block';
 
+    stt.m = await fetchData();
+    stt.t = await t;
 
     var merged = [].concat.apply([], stt.m);
+    //var merge = [].concat.apply([], stt.t);
 
-    console.log(merged);
+    //console.log(stt.t);
     var a = calc(merged);
     a = a.filter((thing, index, self) =>
         index === self.findIndex((t) => (
             t.id === thing.id && t.i === thing.i
         ))
     )
-    //console.log(a);
+    console.log(a);
     renderHead();
-    
+
     renderStudents(a);
+
     colcell(state.sess.length);
+    //document.getElementById('myChart').innerHTML = '';
+    //barChart(stt.t);
     closeModal();
 
 
@@ -255,12 +288,108 @@ const colcell = (n) => {
 
         }
         if (arrayLignes[i].cells[3].textContent == '0') {
-            arrayLignes[i].cells[3].style.backgroundColor = '#00BFA6' ;
+            arrayLignes[i].cells[3].style.backgroundColor = '#53FEA0';
         }
-        if (arrayLignes[i].cells[3].textContent ==n/2) {
-            arrayLignes[i].cells[3].style.backgroundColor = '#FFEEAA' 
+        if (arrayLignes[i].cells[3].textContent > '0' && arrayLignes[i].cells[3].textContent < n / 2) {
+            arrayLignes[i].cells[3].style.backgroundColor = '#E9FF63'
+        }
+        if (arrayLignes[i].cells[3].textContent == n / 2) {
+            arrayLignes[i].cells[3].style.backgroundColor = '#FFEEAA'
+        }
+        if (arrayLignes[i].cells[3].textContent > n / 2 && arrayLignes[i].cells[3].textContent < n) {
+            arrayLignes[i].cells[3].style.backgroundColor = '#FF8463'
         }
         i++;
 
     };
+}
+const barChart = (Data) => {
+    let myChart = document.getElementById('myChart').getContext('2d');
+    Chart.defaults.global.defaultFontFamily = 'Lato';
+    Chart.defaults.global.defaultFontSize = 18;
+    Chart.defaults.global.defaultFontColor = '#777';
+
+    let data = {
+
+        labels: objTotab(Data, 'value', 'a'),
+        //labels: ['ZIANE', 'HAMZA', 'AYOUB'
+
+        datasets: [
+
+            {
+                backgroundColor: "#FF0000",
+                //borderColor: "rgba(41, 61, 90, 0.99)",
+                //borderWidth: 2,
+                //hoverBackgroundColor: "#6C63FF",
+                //hoverBorderColor: "rgba(255,99,132,1)",
+                fill: false,
+                label: 'Absences par Cours',
+
+
+
+                data: objTotab(Data, 'value', 'i'),
+
+
+            }
+
+
+        ]
+    };
+
+    let options = {
+
+        cutoutPercentage: 65,
+        maintainAspectRatio: false,
+        legend: {
+            display: true,
+            position: 'top',
+            align: 'center',
+            labels: {
+                fontColor: '#000',
+                boxWidth: 30,
+                fontSize: 15
+            }
+        },
+        scales: {
+            yAxes: [{
+                ticks: {
+                    stepSize: 1,
+                    min: 0
+                }
+            }],
+            xAxes: [{
+                ticks: {
+                    display: false
+                }
+            }]
+        }
+        
+            
+        
+
+    };
+    let massPopChart = new Chart(myChart, {
+        type: 'bar',
+        options: options,
+        data: data
+    });
+
+}
+const objTotab = (data, type, ty) => {
+    let k, x, i;
+    x = [];
+    if (type == 'key') {
+        k = Object.keys(data);
+    } else {
+        k = tabTotab(Object.values(data), ty);
+
+    }
+    return k;
+};
+
+const tabTotab = (data, type) => {
+    return data.map(function (current) {
+        return current[type]
+    });
+
 }
